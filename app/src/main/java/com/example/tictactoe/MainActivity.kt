@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -34,18 +36,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import com.example.tictactoe.ui.theme.TicTacToeTheme
 
 class MainActivity : ComponentActivity() {
@@ -60,18 +57,20 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     containerColor = Color.Black,
                     topBar = {
-                        CenterAlignedTopAppBar(actions = {
-                            IconButton(
-                                colors = IconButtonColors(
-                                    containerColor = Color.Black,
-                                    contentColor = Color.White,
-                                    disabledContentColor = Color.Transparent,
-                                    disabledContainerColor = Color.Transparent,
-                                ),
-                                onClick = {
-                                    if (!gameViewModel.isGameFinished) gameViewModel.clearGame()
-                                },
-                                content = {
+                        CenterAlignedTopAppBar(
+                            actions = {
+                                IconButton(
+                                    colors = IconButtonColors(
+                                        containerColor = Color.Black,
+                                        contentColor = Color.White,
+                                        disabledContentColor = Color.Transparent,
+                                        disabledContainerColor = Color.Transparent,
+                                    ),
+                                    onClick = {
+                                        if (!gameViewModel.isGameFinished) gameViewModel.clearGame()
+                                    },
+                                    enabled = true,
+                                ) {
                                     Icon(
                                         contentDescription = "Refresh Game",
                                         tint = Color.White,
@@ -81,10 +80,8 @@ class MainActivity : ComponentActivity() {
                                             height = 30.dp
                                         )
                                     )
-                                },
-                                enabled = true,
-                            )
-                        },
+                                }
+                            },
                             colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = Color.Black,
                                 titleContentColor = Color.White,
@@ -94,7 +91,8 @@ class MainActivity : ComponentActivity() {
                                     "TicTacToe",
                                     color = Color.White,
                                 )
-                            })
+                            },
+                        )
                     },
                 ) { innerPadding ->
                     MainLayout(
@@ -208,25 +206,26 @@ fun MainLayout(
                             color = Color.White
                         ),
                         modifier = Modifier
-                            .height(100.dp)
+                            .aspectRatio(1f)
                             .clickable {
                                 if (viewModel.xoList[index] != "" || viewModel.isGameFinished) {
                                     return@clickable
                                 }
-                                viewModel.xoList[index] = if (viewModel.isTurnX) "X" else "O"
-                                viewModel.checkGameStatus()
-                                viewModel.isTurnX = !viewModel.isTurnX
+                                viewModel.performNewMove(index = index)
                             },
                     ) {
-                        Box {
-                            Text(
-                                text = item,
-                                fontSize = 70.sp,
-                                modifier = Modifier.align(Alignment.Center),
-                                textAlign = TextAlign.Center,
-                                color = if (item == "X") Color.White else Color.Red
-                            )
-                        }
+                        Text(
+                            text = item,
+                            fontSize = 70.sp,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .wrapContentSize(
+                                    Alignment.Center
+                                )
+                                .alpha(if (viewModel.isGoingToDeleteList[index]) 0.5f else 1f),
+                            textAlign = TextAlign.Center,
+                            color = if (item == "X") Color.White else Color.Red
+                        )
                     }
                 }
             }

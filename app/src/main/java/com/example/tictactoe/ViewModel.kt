@@ -15,9 +15,44 @@ class MyViewModel : ViewModel() {
     var winnerTitle by mutableStateOf<String>("")
     var xWins by mutableStateOf<Int>(0)
     var oWins by mutableStateOf<Int>(0)
+    var xoMap: MutableMap<Int, Int?> = (1..7).associateWith { null }.toMutableMap()
+    var isGoingToDeleteList = mutableStateListOf<Boolean>().apply {
+        repeat(9) { add(false) }
+    }
+    var i = 0
     fun clearGame() {
         xoList.clear()
+        xoMap.clear()
+        i = 0
         xoList.addAll(List(9) { "" })
+        xoMap = (1..7).associateWith { null }.toMutableMap()
+    }
+
+    fun performNewMove(index: Int) {
+        xoList[index] = if (isTurnX) "X" else "O"
+        isGoingToDeleteList[index] = false
+        if (i < 7) {
+            i++
+        }
+        xoMap[i] = index
+
+        if (i > 6) {
+            xoList[xoMap[1]!!] = ""
+            shiftMapValues(map = xoMap)
+        }
+        if (i > 5) {
+            isGoingToDeleteList[xoMap[1]!!] = true
+        }
+        checkGameStatus()
+        isTurnX = !isTurnX
+    }
+
+    fun shiftMapValues(map: MutableMap<Int, Int?>) {
+        val keys = map.keys.sorted()
+        for (i in 0 until keys.size - 1) {
+            map[keys[i]] = map[keys[i + 1]]
+        }
+        map[keys.last()] = null
     }
 
     fun checkGameStatus() {
@@ -25,75 +60,75 @@ class MyViewModel : ViewModel() {
             isGameFinished = true
 
             if (xoList[0] == "X") {
-                changeWinnerTitile("X")
+                changeWinnerTitle("X")
             } else {
-                changeWinnerTitile("O")
+                changeWinnerTitle("O")
             }
         } else if (xoList[2] == xoList[5] && xoList[5] == xoList[8] && xoList[2].isNotEmpty()) {
             isGameFinished = true
 
             if (xoList[2] == "X") {
-                changeWinnerTitile("X")
+                changeWinnerTitle("X")
             } else {
-                changeWinnerTitile("O")
+                changeWinnerTitle("O")
             }
         } else if (xoList[0] == xoList[3] && xoList[3] == xoList[6] && xoList[0].isNotEmpty()) {
             isGameFinished = true
 
             if (xoList[0] == "X") {
-                changeWinnerTitile("X")
+                changeWinnerTitle("X")
             } else {
-                changeWinnerTitile("O")
+                changeWinnerTitle("O")
             }
         } else if (xoList[6] == xoList[7] && xoList[7] == xoList[8] && xoList[6].isNotEmpty()) {
             isGameFinished = true
 
             if (xoList[6] == "X") {
-                changeWinnerTitile("X")
+                changeWinnerTitle("X")
             } else {
-                changeWinnerTitile("O")
+                changeWinnerTitle("O")
             }
         } else if (xoList[0] == xoList[4] && xoList[4] == xoList[8] && xoList[0].isNotEmpty()) {
             isGameFinished = true
 
             if (xoList[0] == "X") {
-                changeWinnerTitile("X")
+                changeWinnerTitle("X")
             } else {
-                changeWinnerTitile("O")
+                changeWinnerTitle("O")
             }
         } else if (xoList[2] == xoList[4] && xoList[4] == xoList[6] && xoList[2].isNotEmpty()) {
             isGameFinished = true
 
             if (xoList[2] == "X") {
-                changeWinnerTitile("X")
+                changeWinnerTitle("X")
             } else {
-                changeWinnerTitile("O")
+                changeWinnerTitle("O")
             }
         } else if (xoList[1] == xoList[4] && xoList[4] == xoList[7] && xoList[1].isNotEmpty()) {
             isGameFinished = true
 
             if (xoList[1] == "X") {
-                changeWinnerTitile("X")
+                changeWinnerTitle("X")
             } else {
-                changeWinnerTitile("O")
+                changeWinnerTitle("O")
             }
         } else if (xoList[3] == xoList[4] && xoList[4] == xoList[5] && xoList[3].isNotEmpty()) {
             isGameFinished = true
 
             if (xoList[3] == "X") {
-                changeWinnerTitile("X")
+                changeWinnerTitle("X")
             } else {
-                changeWinnerTitile("O")
+                changeWinnerTitle("O")
             }
         } else {
             if (xoList.all({ it.isNotEmpty() })) {
                 isGameFinished = true
-                changeWinnerTitile("draw")
+                changeWinnerTitle("draw")
             }
         }
     }
 
-    fun changeWinnerTitile(winner: String) {
+    private fun changeWinnerTitle(winner: String) {
         when (winner) {
             "X" -> {
                 winnerTitle = "Winner is X, play again!"
