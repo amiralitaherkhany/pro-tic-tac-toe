@@ -1,134 +1,83 @@
 package com.example.tictactoe
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
-class MyViewModel : ViewModel() {
-    var xoList = mutableStateListOf<String>().apply {
-        repeat(9) { add("") }
-    }
-    var isTurnX by mutableStateOf<Boolean>(true)
-    var isGameFinished by mutableStateOf<Boolean>(false)
-    var winnerTitle by mutableStateOf<String>("")
-    var xWins by mutableStateOf<Int>(0)
-    var oWins by mutableStateOf<Int>(0)
-    var xoMap: MutableMap<Int, Int?> = (1..7).associateWith { null }.toMutableMap()
-    var isGoingToDeleteList = mutableStateListOf<Boolean>().apply {
-        repeat(9) { add(false) }
-    }
-    var i = 0
-    fun clearGame() {
-        xoList.clear()
-        xoMap.clear()
-        i = 0
-        xoList.addAll(List(9) { "" })
-        xoMap = (1..7).associateWith { null }.toMutableMap()
-    }
+class GameViewModel(var isPro: Boolean) : ViewModel() {
+    private var turnNumber = 0
+    var isTurnX by mutableStateOf(true)
+    var isGameFinished by mutableStateOf(false)
+    var winnerTitle by mutableStateOf("")
+    var xWins by mutableIntStateOf(0)
+    var oWins by mutableIntStateOf(0)
+    private var xoQueue: ArrayDeque<Move> = ArrayDeque()
+    var xoList by mutableStateOf(
+        List(3) { MutableList(3) { "" } }
+    )
+    var isGoingToDeleteList by mutableStateOf(
+        List(3) { MutableList(3) { false } }
+    )
 
-    fun performNewMove(index: Int) {
-        xoList[index] = if (isTurnX) "X" else "O"
-        isGoingToDeleteList[index] = false
-        if (i < 7) {
-            i++
-        }
-        xoMap[i] = index
+    fun performNewMove(
+        move: Move
+    ) {
+        xoList[move.row][move.column] = if (isTurnX) "X" else "O"
 
-        if (i > 6) {
-            xoList[xoMap[1]!!] = ""
-            shiftMapValues(map = xoMap)
+        if (isPro) {
+            isGoingToDeleteList[move.row][move.column] = false
+            if (turnNumber < 7) {
+                turnNumber++
+            }
+            xoQueue.add(move)
+            if (turnNumber > 6) {
+                xoList[xoQueue.first().row][xoQueue.first().column] = ""
+                xoQueue.removeFirst()
+            }
+            if (turnNumber > 5) {
+                isGoingToDeleteList[xoQueue.first().row][xoQueue.first().column] = true
+            }
         }
-        if (i > 5) {
-            isGoingToDeleteList[xoMap[1]!!] = true
-        }
+
+
         checkGameStatus()
         isTurnX = !isTurnX
     }
 
-    fun shiftMapValues(map: MutableMap<Int, Int?>) {
-        val keys = map.keys.sorted()
-        for (i in 0 until keys.size - 1) {
-            map[keys[i]] = map[keys[i + 1]]
-        }
-        map[keys.last()] = null
-    }
-
-    fun checkGameStatus() {
-        if (xoList[0] == xoList[1] && xoList[1] == xoList[2] && xoList[0].isNotEmpty()) {
-            isGameFinished = true
-
-            if (xoList[0] == "X") {
-                changeWinnerTitle("X")
-            } else {
-                changeWinnerTitle("O")
-            }
-        } else if (xoList[2] == xoList[5] && xoList[5] == xoList[8] && xoList[2].isNotEmpty()) {
-            isGameFinished = true
-
-            if (xoList[2] == "X") {
-                changeWinnerTitle("X")
-            } else {
-                changeWinnerTitle("O")
-            }
-        } else if (xoList[0] == xoList[3] && xoList[3] == xoList[6] && xoList[0].isNotEmpty()) {
-            isGameFinished = true
-
-            if (xoList[0] == "X") {
-                changeWinnerTitle("X")
-            } else {
-                changeWinnerTitle("O")
-            }
-        } else if (xoList[6] == xoList[7] && xoList[7] == xoList[8] && xoList[6].isNotEmpty()) {
-            isGameFinished = true
-
-            if (xoList[6] == "X") {
-                changeWinnerTitle("X")
-            } else {
-                changeWinnerTitle("O")
-            }
-        } else if (xoList[0] == xoList[4] && xoList[4] == xoList[8] && xoList[0].isNotEmpty()) {
-            isGameFinished = true
-
-            if (xoList[0] == "X") {
-                changeWinnerTitle("X")
-            } else {
-                changeWinnerTitle("O")
-            }
-        } else if (xoList[2] == xoList[4] && xoList[4] == xoList[6] && xoList[2].isNotEmpty()) {
-            isGameFinished = true
-
-            if (xoList[2] == "X") {
-                changeWinnerTitle("X")
-            } else {
-                changeWinnerTitle("O")
-            }
-        } else if (xoList[1] == xoList[4] && xoList[4] == xoList[7] && xoList[1].isNotEmpty()) {
-            isGameFinished = true
-
-            if (xoList[1] == "X") {
-                changeWinnerTitle("X")
-            } else {
-                changeWinnerTitle("O")
-            }
-        } else if (xoList[3] == xoList[4] && xoList[4] == xoList[5] && xoList[3].isNotEmpty()) {
-            isGameFinished = true
-
-            if (xoList[3] == "X") {
-                changeWinnerTitle("X")
-            } else {
-                changeWinnerTitle("O")
-            }
-        } else {
-            if (xoList.all({ it.isNotEmpty() })) {
+    private fun checkGameStatus() {
+        for (row in 0..2) {
+            if (xoList[row][0] == xoList[row][1] && xoList[row][1] == xoList[row][2] && xoList[row][0].isNotEmpty()) {
                 isGameFinished = true
-                changeWinnerTitle("draw")
+                placeWinner(xoList[row][0])
+                return
             }
+        }
+        for (col in 0..2) {
+            if (xoList[0][col] == xoList[1][col] && xoList[1][col] == xoList[2][col] && xoList[0][col].isNotEmpty()) {
+                isGameFinished = true
+                placeWinner(xoList[0][col])
+                return
+            }
+        }
+        if (xoList[0][0] == xoList[1][1] && xoList[1][1] == xoList[2][2] && xoList[0][0].isNotEmpty()) {
+            isGameFinished = true
+            placeWinner(xoList[0][0])
+            return
+        }
+        if (xoList[0][2] == xoList[1][1] && xoList[1][1] == xoList[2][0] && xoList[0][2].isNotEmpty()) {
+            isGameFinished = true
+            placeWinner(xoList[0][2])
+            return
+        }
+        if (xoList.all { row -> row.all { it.isNotEmpty() } }) {
+            isGameFinished = true
+            placeWinner("draw")
         }
     }
 
-    private fun changeWinnerTitle(winner: String) {
+    private fun placeWinner(winner: String) {
         when (winner) {
             "X" -> {
                 winnerTitle = "Winner is X, play again!"
@@ -152,5 +101,11 @@ class MyViewModel : ViewModel() {
         isGameFinished = false
         clearGame()
         winnerTitle = ""
+    }
+
+    fun clearGame() {
+        xoList = List(3) { MutableList(3) { "" } }
+        xoQueue.clear()
+        turnNumber = 0
     }
 }
