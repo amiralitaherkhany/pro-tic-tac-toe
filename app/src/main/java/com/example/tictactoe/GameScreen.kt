@@ -49,11 +49,20 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GameScreen(isPro: Boolean) {
-    val gameViewModel = GameViewModel(isPro)
+fun GameScreen(
+    isPro: Boolean,
+    isAi: Boolean
+) {
+    val gameViewModel = GameViewModel(
+        isPro,
+        isAi
+    )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = Color(color = 0xff607D8B),
@@ -68,7 +77,9 @@ fun GameScreen(isPro: Boolean) {
                             disabledContainerColor = Color.Transparent,
                         ),
                         onClick = {
-                            if (!gameViewModel.isGameFinished) gameViewModel.clearGame()
+                            CoroutineScope(Dispatchers.Main).launch {
+                                if (!gameViewModel.isGameFinished && !gameViewModel.isTurnX) gameViewModel.resetGame()
+                            }
                         },
                         enabled = true,
                     ) {
@@ -99,6 +110,7 @@ fun GameScreen(isPro: Boolean) {
         MainLayout(
             modifier = Modifier.padding(innerPadding),
             viewModel = gameViewModel,
+            isAI = isAi,
         )
     }
 }
@@ -107,6 +119,7 @@ fun GameScreen(isPro: Boolean) {
 fun MainLayout(
     viewModel: GameViewModel,
     modifier: Modifier,
+    isAI: Boolean
 ) {
     Box {
         Column(
@@ -178,7 +191,9 @@ fun MainLayout(
             AnimatedVisibility(visible = viewModel.isGameFinished) {
                 Button(
                     onClick = {
-                        viewModel.resetGame()
+                        CoroutineScope(Dispatchers.Main).launch {
+                            viewModel.resetGame()
+                        }
                     },
                     border = BorderStroke(
                         width = 2.dp,
@@ -232,29 +247,31 @@ fun MainLayout(
                                 .clickable {
                                     val row = index / 3
                                     val column = index % 3
-                                    if (viewModel.xoList[row][column] != "" || viewModel.isGameFinished) {
+                                    if (viewModel.xoList[row][column] != '_' || viewModel.isGameFinished || (if (isAI) viewModel.isTurnX else false)) {
                                         return@clickable
                                     }
-                                    viewModel.performNewMove(
-                                        Move(
-                                            row = row,
-                                            column = column
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        viewModel.performNewMove(
+                                            Move(
+                                                row = row,
+                                                column = column
+                                            )
                                         )
-                                    )
+                                    }
                                 }
                                 .padding(0.dp),
                         ) {
                             val row = index / 3
                             val column = index % 3
                             when (viewModel.xoList[row][column]) {
-                                "X" -> {
+                                'X' -> {
                                     GameImage(
                                         isX = true,
                                         isBlinking = viewModel.isGoingToDeleteList[row][column]
                                     )
                                 }
 
-                                "O" -> {
+                                'O' -> {
                                     GameImage(
                                         isX = false,
                                         isBlinking = viewModel.isGoingToDeleteList[row][column]
