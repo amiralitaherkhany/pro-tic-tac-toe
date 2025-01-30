@@ -1,5 +1,6 @@
 package com.example.tictactoe
 
+import android.view.MotionEvent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -8,47 +9,59 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.tictactoe.ui.theme.accent1
+import com.example.tictactoe.ui.theme.accent2
+import com.example.tictactoe.ui.theme.accent3
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -57,7 +70,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun GameScreen(
     isPro: Boolean,
-    isAi: Boolean
+    isAi: Boolean,
+    navController: NavController,
 ) {
     val gameViewModel = GameViewModel(
         isPro,
@@ -65,53 +79,126 @@ fun GameScreen(
     )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = Color(color = 0xff607D8B),
-        topBar = {
-            CenterAlignedTopAppBar(
-                actions = {
-                    IconButton(
-                        colors = IconButtonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = Color.Transparent,
-                            disabledContentColor = Color.Transparent,
-                            disabledContainerColor = Color.Transparent,
-                        ),
-                        onClick = {
-                            CoroutineScope(Dispatchers.Main).launch {
-                                if (!gameViewModel.isGameFinished && !gameViewModel.isTurnX) gameViewModel.resetGame()
-                            }
-                        },
-                        enabled = true,
-                    ) {
-                        Icon(
-                            contentDescription = "Refresh Game",
-                            tint = Color(0xff212121),
-                            imageVector = Icons.Filled.Refresh,
-                            modifier = Modifier.size(
-                                width = 30.dp,
-                                height = 30.dp
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            MainLayout(
+                modifier = Modifier
+                    .padding(innerPadding),
+                viewModel = gameViewModel,
+                isAi = isAi,
+                navController = navController
+            )
+
+            AnimatedVisibility(
+                visible = gameViewModel.isGameFinished,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable { }
+                    .background(MaterialTheme.colorScheme.background.copy(alpha = 0.75f))
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        gameViewModel.winnerTitle,
+                        style = MaterialTheme.typography.headlineMedium.plus(
+                            TextStyle(
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 50.sp,
                             )
+                        ),
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        MiniCustomButton(
+                            onClick = {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    gameViewModel.resetGame()
+                                }
+                            },
+                            icon = Icons.Filled.Replay,
+                        )
+                        Spacer(Modifier.width(24.dp))
+                        MiniCustomButton(
+                            onClick = {
+                                navController.navigate("gameModeSelection") {
+                                    popUpTo(0) { inclusive = true }
+                                }
+                            },
+                            icon = Icons.Filled.Home,
                         )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(color = 0xff607D8B),
-                    titleContentColor = Color.White,
-                ),
-                title = {
-                    Text(
-                        "TicTacToe",
-                        color = Color.White,
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun MiniCustomButton(
+    onClick: () -> Unit,
+    icon: ImageVector,
+    modifier: Modifier = Modifier
+) {
+    var isPressed by remember { mutableStateOf(false) }
+    Box(
+        modifier = modifier
+            .size(38.dp)
+            .pointerInteropFilter { event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        isPressed = true
+                    }
+
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        isPressed = false
+                        onClick()
+                    }
+                }
+                true
+            },
+    ) {
+        Surface(
+            modifier = Modifier
+                .size(36.dp)
+                .align(if (isPressed) Alignment.Center else Alignment.BottomStart)
+        ) { }
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .align(if (isPressed) Alignment.Center else Alignment.TopEnd)
+                .background(MaterialTheme.colorScheme.secondary)
+                .border(
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.primary
                     )
-                },
-            )
-        },
-    ) { innerPadding ->
-        MainLayout(
-            modifier = Modifier.padding(innerPadding),
-            viewModel = gameViewModel,
-            isAI = isAi,
-        )
+                ),
+        ) {
+            Surface(
+                modifier = Modifier
+                    .size(32.dp)
+                    .align(Alignment.Center),
+                color = MaterialTheme.colorScheme.primary,
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = "Replay",
+                    tint = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(4.dp)
+                )
+            }
+        }
     }
 }
 
@@ -119,195 +206,124 @@ fun GameScreen(
 fun MainLayout(
     viewModel: GameViewModel,
     modifier: Modifier,
-    isAI: Boolean
+    isAi: Boolean,
+    navController: NavController,
 ) {
-    Box {
-        Column(
-            modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        Board(
+            modifier = Modifier.align(Alignment.Center),
+            viewModel = viewModel,
+            isAi = isAi
+        )
+
+
+
+
+        AnimatedVisibility(
+            visible = viewModel.isTurnX.not() or isAi,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
         ) {
-            Spacer(
-                Modifier.height(30.dp)
-            )
-            Row {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(
-                        0.5f,
-                        fill = true,
-                    ),
-                ) {
-                    Text(
-                        text = buildAnnotatedString {
-                            append("Player ")
-                            withStyle(style = SpanStyle(color = Color(0xffF44336))) {
-                                append("O")
-                            }
-                        },
-                        fontSize = 25.sp,
-                        color = Color.White,
-                    )
-                    Spacer(
-                        Modifier.height(20.dp)
-                    )
-                    Text(
-                        text = viewModel.oWins.toString(),
-                        color = Color.White,
-                        fontSize = 25.sp,
-                    )
-                }
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(
-                        0.5f,
-                        fill = true,
-                    )
-                ) {
-                    Text(
-                        text = buildAnnotatedString {
-                            append("Player ")
-                            withStyle(style = SpanStyle(color = Color(0xff212121))) {
-                                append("X")
-                            }
-                        },
-                        color = Color.White,
-                        fontSize = 25.sp,
-                    )
-                    Spacer(
-                        Modifier.height(20.dp),
-                    )
-                    Text(
-                        text = viewModel.xWins.toString(),
-                        fontSize = 25.sp,
-                        color = Color.White,
-                    )
-                }
-            }
-            Spacer(
-                Modifier.height(25.dp)
-            )
-            AnimatedVisibility(visible = viewModel.isGameFinished) {
-                Button(
-                    onClick = {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            viewModel.resetGame()
-                        }
-                    },
-                    border = BorderStroke(
-                        width = 2.dp,
-                        color = Color(0xff212121),
-                    ),
-                    colors = ButtonColors(
-                        contentColor = Color(0xff212121),
-                        disabledContentColor = Color.Transparent,
-                        containerColor = Color(0xffBDBDBD),
-                        disabledContainerColor = Color.Transparent,
-                    ),
-                    modifier = Modifier.size(
-                        width = 300.dp,
-                        height = 50.dp
-                    )
-                ) {
-                    Text(
-                        viewModel.winnerTitle,
-                        fontSize = 20.sp
-                    )
-                }
-            }
-            Spacer(
-                Modifier.height(25.dp)
-            )
-
-            Surface(
-                border = BorderStroke(
-                    width = 5.dp,
-                    color = Color(0xff212121),
-                ),
-                color = Color.Transparent,
-                modifier = Modifier.padding(10.dp),
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = modifier
+                    .fillMaxHeight(0.15f)
             ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(count = 3),
-                    verticalArrangement = Arrangement.Center,
-                    userScrollEnabled = false,
-                    horizontalArrangement = Arrangement.Center,
-                    contentPadding = PaddingValues(0.dp),
-                ) {
-                    items(viewModel.xoList.flatten().size) { index ->
-                        Surface(
-                            color = Color.Transparent,
-                            border = BorderStroke(
-                                width = 2.dp,
-                                color = Color(0xff212121),
-                            ),
-                            modifier = Modifier
-                                .aspectRatio(1f)
-                                .clickable {
-                                    val row = index / 3
-                                    val column = index % 3
-                                    if (viewModel.xoList[row][column] != '_' || viewModel.isGameFinished || (if (isAI) viewModel.isTurnX else false)) {
-                                        return@clickable
-                                    }
-                                    CoroutineScope(Dispatchers.Main).launch {
-                                        viewModel.performNewMove(
-                                            Move(
-                                                row = row,
-                                                column = column
-                                            )
-                                        )
-                                    }
-                                }
-                                .padding(0.dp),
-                        ) {
-                            val row = index / 3
-                            val column = index % 3
-                            when (viewModel.xoList[row][column]) {
-                                'X' -> {
-                                    GameImage(
-                                        isX = true,
-                                        isBlinking = viewModel.isGoingToDeleteList[row][column]
-                                    )
-                                }
+                Text(
+                    if (viewModel.isTurnX) (if (isAi) "X" else "O") else "O",
+                    style = MaterialTheme.typography.headlineMedium.plus(
+                        TextStyle(
+                            fontSize = 50.sp
+                        )
+                    ),
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Text(
+                    if (isAi.not()) "Your Move" else (if (viewModel.isTurnX) "AI’s Move" else "Your Move"),
+                    style = MaterialTheme.typography.bodyLarge.plus(
+                        TextStyle(
+                            fontSize = 20.sp,
+                        )
+                    ),
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
+        }
 
-                                'O' -> {
-                                    GameImage(
-                                        isX = false,
-                                        isBlinking = viewModel.isGoingToDeleteList[row][column]
-                                    )
-                                }
-                            }
-                        }
-                    }
+        if (isAi.not()) {
+            AnimatedVisibility(
+                visible = viewModel.isTurnX,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = modifier
+                        .fillMaxHeight(0.15f)
+                ) {
+                    Text(
+                        "Your Move",
+                        style = MaterialTheme.typography.bodyLarge.plus(
+                            TextStyle(
+                                fontSize = 20.sp,
+                            )
+                        ),
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.rotate(180f)
+                    )
+
+                    Text(
+                        if (viewModel.isTurnX) "X" else (if (isAi) "O" else "X"),
+                        style = MaterialTheme.typography.headlineMedium.plus(
+                            TextStyle(
+                                fontSize = 50.sp
+                            )
+                        ),
+                        color = MaterialTheme.colorScheme.primary,
+                    )
                 }
             }
         }
-        Text(
-            if (viewModel.isTurnX) buildAnnotatedString {
-                append("Turn ")
-                withStyle(style = SpanStyle(color = Color(0xff212121))) {
-                    append("X")
-                }
-            } else buildAnnotatedString {
-                append("Turn ")
-                withStyle(style = SpanStyle(color = Color(0xffF44336))) {
-                    append("O")
-                }
-            },
-            color = Color.White,
-            fontSize = 20.sp,
+
+        Column(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 20.dp)
-        )
+                .align(Alignment.TopStart)
+                .padding(
+                    start = 24.dp,
+                    top = 20.dp
+                ),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            MiniCustomButton(
+                icon = Icons.Filled.Close,
+                onClick = {
+                    navController.navigate("gameModeSelection") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+            )
+            Spacer(Modifier.height(15.dp))
+            MiniCustomButton(
+                icon = Icons.Filled.Replay,
+                onClick = {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        if (isAi.not() or (isAi and viewModel.isTurnX.not())) viewModel.resetGame()
+                    }
+                },
+            )
+        }
     }
 }
 
 @Composable
-fun GameImage(
+fun XoElement(
     isBlinking: Boolean,
-    isX: Boolean
+    isX: Boolean,
+    isAi: Boolean,
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "")
     val alpha by infiniteTransition.animateFloat(
@@ -317,20 +333,234 @@ fun GameImage(
             animation = tween(500),
             repeatMode = RepeatMode.Reverse
         ),
-        label = ""
+        label = "",
     )
     val currentAlpha = if (isBlinking) alpha else 1f
 
 
 
-    Image(
-        painter = painterResource(if (isX) R.drawable.x_icon else R.drawable.o_icon),
-        contentDescription = null,
-        contentScale = ContentScale.Inside,
-        alignment = Alignment.Center,
+    Text(
+        if (isX) "X" else "O",
+        style = MaterialTheme.typography.headlineLarge.plus(
+            TextStyle(
+                fontSize = 60.sp,
+            )
+        ),
+        color = if (isX) (if (isAi) accent2 else MaterialTheme.colorScheme.primary) else (if (isAi) accent3 else accent1),
         modifier = Modifier
             .graphicsLayer(alpha = currentAlpha)
-            .scale(0.5f)
+            .wrapContentSize()
     )
 }
 
+@Composable
+fun Board(
+    modifier: Modifier,
+    viewModel: GameViewModel,
+    isAi: Boolean,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxHeight(0.65f),
+    ) {
+        if (isAi.not()) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .alpha(if (viewModel.isTurnX) 0.25f else 1f),
+            ) {
+                Text(
+                    "Player 1 - O",
+                    style = MaterialTheme.typography.bodyMedium.plus(
+                        TextStyle(
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 17.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    ),
+                )
+                Image(
+                    painter = painterResource(R.drawable.self_image),
+                    contentDescription = "Self Image",
+                    modifier = Modifier
+                        .size(
+                            100.dp,
+                            100.dp
+                        ),
+                    contentScale = ContentScale.Crop,
+                )
+            }
+        }
+
+
+        if (isAi.not()) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .alpha(if (viewModel.isTurnX.not()) 0.25f else 1f)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.opponent_image),
+                    contentDescription = "Opponent Image",
+                    modifier = Modifier
+                        .size(
+                            100.dp,
+                            100.dp
+                        ),
+                    contentScale = ContentScale.Crop,
+                )
+                Text(
+                    "Player 2 - X",
+                    modifier = Modifier.rotate(180f),
+                    style = MaterialTheme.typography.bodyMedium.plus(
+                        TextStyle(
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 17.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    ),
+                )
+            }
+        }
+        if (isAi) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .alpha(if (viewModel.isTurnX) 0.25f else 1f)
+            ) {
+                Text(
+                    "You - O",
+                    style = MaterialTheme.typography.bodyMedium.plus(
+                        TextStyle(
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 17.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    ),
+                )
+                Image(
+                    painter = painterResource(R.drawable.self_ai_image),
+                    contentDescription = "Self Image",
+                    modifier = Modifier
+                        .size(
+                            100.dp,
+                            100.dp
+                        ),
+                    contentScale = ContentScale.Crop,
+                )
+            }
+        }
+        if (isAi) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .alpha(if (viewModel.isTurnX.not()) 0.25f else 1f)
+            ) {
+                Text(
+                    "Game AI - X",
+                    style = MaterialTheme.typography.bodyMedium.plus(
+                        TextStyle(
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 17.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    ),
+                )
+                Image(
+                    painter = painterResource(R.drawable.ai_image),
+                    contentDescription = "Self Image",
+                    modifier = Modifier
+                        .size(
+                            100.dp,
+                            100.dp
+                        ),
+                    contentScale = ContentScale.Crop,
+                )
+            }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.75f)
+                .aspectRatio(1f)
+                .align(Alignment.Center)
+        ) {
+            Surface(
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .fillMaxWidth(0.96f)
+                    .aspectRatio(1f)
+                    .align(Alignment.BottomStart)
+            ) {
+            }
+
+            LazyVerticalGrid(
+                verticalArrangement = Arrangement.spacedBy(1.dp),
+                horizontalArrangement = Arrangement.spacedBy(1.dp),
+                columns = GridCells.Fixed(count = 3),
+                userScrollEnabled = false,
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.primary)
+                    .fillMaxWidth(0.96f)
+                    .aspectRatio(1f)
+                    .align(Alignment.TopEnd)
+                    .border(
+                        border = BorderStroke(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                        ),
+                    ),
+            ) {
+                items(viewModel.xoList.flatten().size) { index ->
+                    Surface(
+                        color = MaterialTheme.colorScheme.secondary,
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                        ),
+                        modifier = Modifier
+                            .aspectRatio(1f)
+                            .clickable {
+                                val row = index / 3
+                                val column = index % 3
+                                if (viewModel.xoList[row][column] != '_' || viewModel.isGameFinished || (if (isAi) viewModel.isTurnX else false)) {
+                                    return@clickable
+                                }
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    viewModel.performNewMove(
+                                        Move(
+                                            row = row,
+                                            column = column
+                                        )
+                                    )
+                                }
+                            },
+                    ) {
+                        val row = index / 3
+                        val column = index % 3
+                        when (viewModel.xoList[row][column]) {
+                            'X' -> {
+                                XoElement(
+                                    isX = true,
+                                    isBlinking = viewModel.isGoingToDeleteList[row][column],
+                                    isAi = isAi,
+                                )
+                            }
+
+                            'O' -> {
+                                XoElement(
+                                    isX = false,
+                                    isBlinking = viewModel.isGoingToDeleteList[row][column],
+                                    isAi = isAi,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

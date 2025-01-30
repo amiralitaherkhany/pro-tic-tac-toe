@@ -53,7 +53,7 @@ class GameViewModel(
 
     private suspend fun performAiMove() {
         if (!isGameFinished) {
-            delay(500)
+            delay(1000)
             val bestMoveAi = Ai.findBestMove(board = xoList)
             xoList[bestMoveAi.row][bestMoveAi.column] = 'X'
 
@@ -110,12 +110,12 @@ class GameViewModel(
     private fun placeWinner(winner: Char?) {
         when (winner) {
             'X' -> {
-                winnerTitle = "Winner is X, play again!"
+                winnerTitle = if (isAi) "You lost :(" else "Winner is X"
                 xWins++
             }
 
             'O' -> {
-                winnerTitle = "Winner is O, play again!"
+                winnerTitle = if (isAi) "You won :D" else "Winner is O"
                 oWins++
             }
 
