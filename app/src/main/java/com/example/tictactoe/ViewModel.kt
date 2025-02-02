@@ -5,7 +5,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 class GameViewModel(
     private var isPro: Boolean,
@@ -24,7 +26,7 @@ class GameViewModel(
     var isGoingToDeleteList by mutableStateOf(
         List(3) { MutableList(3) { false } }
     )
-    val Ai = TicTacToeAi()
+
     suspend fun performNewMove(
         move: Move
     ) {
@@ -54,7 +56,13 @@ class GameViewModel(
     private suspend fun performAiMove() {
         if (!isGameFinished) {
             delay(1000)
-            val bestMoveAi = Ai.findBestMove(board = xoList)
+            val bestMoveAi = withContext(Dispatchers.Default) {
+                if (isPro) TicTacToeProAi(
+                    numberOfMoves = turnNumber,
+                    moves = xoQueue,
+                    board = xoList
+                ).findBestMove() else TicTacToeAi().findBestMove(board = xoList)
+            }
             xoList[bestMoveAi.row][bestMoveAi.column] = 'X'
 
             if (isPro) {
