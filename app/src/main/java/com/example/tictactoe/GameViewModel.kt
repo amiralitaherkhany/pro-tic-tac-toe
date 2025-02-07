@@ -1,9 +1,5 @@
 package com.example.tictactoe
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -12,41 +8,65 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 
 class GameViewModel(
-    var isPro: Boolean,
-    var isAi: Boolean
+    val isPro: Boolean,
+    val isAi: Boolean
 ) : ViewModel() {
+    ///
+    private var _turnNumber = 0
+    private var _xoQueue: ArrayDeque<Move> = ArrayDeque()
+
+    ///
     private val _isTurnX = MutableStateFlow(false)
     val isTurnX = _isTurnX.asStateFlow()
-    private var turnNumber = 0
-    var isGameFinished by mutableStateOf(false)
-    var winnerTitle by mutableStateOf("")
-    var xWins by mutableIntStateOf(0)
-    var oWins by mutableIntStateOf(0)
-    private var xoQueue: ArrayDeque<Move> = ArrayDeque()
-    var xoList by mutableStateOf(
-        List(3) { MutableList(3) { '_' } }
-    )
-    var isGoingToDeleteList by mutableStateOf(
-        List(3) { MutableList(3) { false } }
-    )
+    private val _isGameFinished = MutableStateFlow(false)
+    val isGameFinished = _isGameFinished.asStateFlow()
+    private val _winnerTitle = MutableStateFlow("")
+    val winnerTitle = _winnerTitle.asStateFlow()
+    private val _xWins = MutableStateFlow(0)
+    val xWins = _xWins.asStateFlow()
+    private val _oWins = MutableStateFlow(0)
+    val oWins = _oWins.asStateFlow()
+    private val _xoList = MutableStateFlow(List(3) { MutableList(3) { '_' } })
+    val xoList = _xoList.asStateFlow()
+    private val _isGoingToDeleteList = MutableStateFlow(List(3) { MutableList(3) { false } })
+    val isGoingToDeleteList = _isGoingToDeleteList.asStateFlow()
 
+    ///
     suspend fun performNewMove(
         move: Move
     ) {
-        xoList[move.row][move.column] = if (isTurnX.value) 'X' else 'O'
+        updateXOList(
+            row = move.row,
+            col = move.column,
+            value = if (_isTurnX.value) 'X' else 'O'
+        )
+
 
         if (isPro) {
-            isGoingToDeleteList[move.row][move.column] = false
-            if (turnNumber < 7) {
-                turnNumber++
+            updateIsGoingToDeleteList(
+                row = move.row,
+                col = move.column,
+                value = false,
+            )
+
+            if (_turnNumber < 7) {
+                _turnNumber++
             }
-            xoQueue.add(move)
-            if (turnNumber > 6) {
-                xoList[xoQueue.first().row][xoQueue.first().column] = '_'
-                xoQueue.removeFirst()
+            _xoQueue.add(move)
+            if (_turnNumber > 6) {
+                updateXOList(
+                    row = _xoQueue.first().row,
+                    col = _xoQueue.first().column,
+                    value = '_'
+                )
+                _xoQueue.removeFirst()
             }
-            if (turnNumber > 5) {
-                isGoingToDeleteList[xoQueue.first().row][xoQueue.first().column] = true
+            if (_turnNumber > 5) {
+                updateIsGoingToDeleteList(
+                    row = _xoQueue.first().row,
+                    col = _xoQueue.first().column,
+                    value = true,
+                )
             }
         }
 
@@ -57,29 +77,46 @@ class GameViewModel(
     }
 
     private suspend fun performAiMove() {
-        if (!isGameFinished) {
+        if (!_isGameFinished.value) {
             delay(1000)
             val bestMoveAi = withContext(Dispatchers.Default) {
                 if (isPro) TicTacToeProAi(
-                    numberOfMoves = turnNumber,
-                    moves = xoQueue,
-                    board = xoList
-                ).findBestMove() else TicTacToeAi().findBestMove(board = xoList)
+                    numberOfMoves = _turnNumber,
+                    moves = _xoQueue,
+                    board = _xoList.value
+                ).findBestMove() else TicTacToeAi().findBestMove(board = _xoList.value)
             }
-            xoList[bestMoveAi.row][bestMoveAi.column] = 'X'
+            updateXOList(
+                row = bestMoveAi.row,
+                col = bestMoveAi.column,
+                value = 'X'
+            )
+
 
             if (isPro) {
-                isGoingToDeleteList[bestMoveAi.row][bestMoveAi.column] = false
-                if (turnNumber < 7) {
-                    turnNumber++
+                updateIsGoingToDeleteList(
+                    row = bestMoveAi.row,
+                    col = bestMoveAi.column,
+                    value = false,
+                )
+                if (_turnNumber < 7) {
+                    _turnNumber++
                 }
-                xoQueue.add(bestMoveAi)
-                if (turnNumber > 6) {
-                    xoList[xoQueue.first().row][xoQueue.first().column] = '_'
-                    xoQueue.removeFirst()
+                _xoQueue.add(bestMoveAi)
+                if (_turnNumber > 6) {
+                    updateXOList(
+                        row = _xoQueue.first().row,
+                        col = _xoQueue.first().column,
+                        value = '_'
+                    )
+                    _xoQueue.removeFirst()
                 }
-                if (turnNumber > 5) {
-                    isGoingToDeleteList[xoQueue.first().row][xoQueue.first().column] = true
+                if (_turnNumber > 5) {
+                    updateIsGoingToDeleteList(
+                        row = _xoQueue.first().row,
+                        col = _xoQueue.first().column,
+                        value = true,
+                    )
                 }
             }
             checkGameStatus()
@@ -87,33 +124,53 @@ class GameViewModel(
         }
     }
 
+    private fun updateXOList(
+        row: Int,
+        col: Int,
+        value: Char
+    ) {
+        val currentList = _xoList.value.map { it.toMutableList() }
+        currentList[row][col] = value
+        _xoList.value = currentList
+    }
+
+    private fun updateIsGoingToDeleteList(
+        row: Int,
+        col: Int,
+        value: Boolean
+    ) {
+        val currentList = _isGoingToDeleteList.value.map { it.toMutableList() }
+        currentList[row][col] = value
+        _isGoingToDeleteList.value = currentList
+    }
+
     private fun checkGameStatus() {
         for (row in 0..2) {
-            if (xoList[row][0] == xoList[row][1] && xoList[row][1] == xoList[row][2] && xoList[row][0] != '_') {
-                isGameFinished = true
-                placeWinner(xoList[row][0])
+            if (_xoList.value[row][0] == _xoList.value[row][1] && _xoList.value[row][1] == _xoList.value[row][2] && _xoList.value[row][0] != '_') {
+                _isGameFinished.value = true
+                placeWinner(_xoList.value[row][0])
                 return
             }
         }
         for (col in 0..2) {
-            if (xoList[0][col] == xoList[1][col] && xoList[1][col] == xoList[2][col] && xoList[0][col] != '_') {
-                isGameFinished = true
-                placeWinner(xoList[0][col])
+            if (_xoList.value[0][col] == _xoList.value[1][col] && _xoList.value[1][col] == _xoList.value[2][col] && _xoList.value[0][col] != '_') {
+                _isGameFinished.value = true
+                placeWinner(_xoList.value[0][col])
                 return
             }
         }
-        if (xoList[0][0] == xoList[1][1] && xoList[1][1] == xoList[2][2] && xoList[0][0] != '_') {
-            isGameFinished = true
-            placeWinner(xoList[0][0])
+        if (_xoList.value[0][0] == _xoList.value[1][1] && _xoList.value[1][1] == _xoList.value[2][2] && _xoList.value[0][0] != '_') {
+            _isGameFinished.value = true
+            placeWinner(_xoList.value[0][0])
             return
         }
-        if (xoList[0][2] == xoList[1][1] && xoList[1][1] == xoList[2][0] && xoList[0][2] != '_') {
-            isGameFinished = true
-            placeWinner(xoList[0][2])
+        if (_xoList.value[0][2] == _xoList.value[1][1] && _xoList.value[1][1] == _xoList.value[2][0] && _xoList.value[0][2] != '_') {
+            _isGameFinished.value = true
+            placeWinner(_xoList.value[0][2])
             return
         }
-        if (xoList.all { row -> row.all { it != '_' } }) {
-            isGameFinished = true
+        if (_xoList.value.all { row -> row.all { it != '_' } }) {
+            _isGameFinished.value = true
             placeWinner(null)
         }
     }
@@ -121,165 +178,33 @@ class GameViewModel(
     private fun placeWinner(winner: Char?) {
         when (winner) {
             'X' -> {
-                winnerTitle = if (isAi) "You lost :(" else "Winner is X"
-                xWins++
+                _winnerTitle.value = if (isAi) "You lost :(" else "Winner is X"
+                _xWins.value++
             }
 
             'O' -> {
-                winnerTitle = if (isAi) "You won :D" else "Winner is O"
-                oWins++
+                _winnerTitle.value = if (isAi) "You won :D" else "Winner is O"
+                _oWins.value++
             }
 
             null -> {
-                winnerTitle = "Draw, play again!"
-                xWins++
-                oWins++
+                _winnerTitle.value = "Draw, play again!"
+                _xWins.value++
+                _oWins.value++
             }
         }
     }
 
     suspend fun resetGame() {
-        isGameFinished = false
+        _isGameFinished.value = false
         clearGame()
-        winnerTitle = ""
+        _winnerTitle.value = ""
         if (isAi && _isTurnX.value) performAiMove()
     }
 
     private fun clearGame() {
-        xoList = List(3) { MutableList(3) { '_' } }
-        xoQueue.clear()
-        turnNumber = 0
-    }
-}
-
-class TicTacToeAi {
-    private fun minimax(
-        board: List<MutableList<Char>>,
-        depth: Int,
-        isAI: Boolean
-    ): Int {
-        val score = evaluate(board)
-        if (score == 10) return score - depth
-        if (score == -10) return score + depth
-        if (isMovesLeft(board).not()) return 0
-
-
-        if (isAI) {
-            var best = Int.MIN_VALUE
-            for (i in 0..2) {
-                for (j in 0..2) {
-                    if (board[i][j] == '_') {
-                        board[i][j] = 'X'
-
-                        best = maxOf(
-                            best,
-                            minimax(
-                                board,
-                                depth + 1,
-                                false
-                            )
-                        )
-
-                        board[i][j] = '_'
-                    }
-                }
-            }
-            return best
-        } else {
-            var best = Int.MAX_VALUE
-            for (i in 0..2) {
-                for (j in 0..2) {
-                    if (board[i][j] == '_') {
-                        board[i][j] = 'O'
-
-                        best = minOf(
-                            best,
-                            minimax(
-                                board,
-                                depth + 1,
-                                true
-                            )
-                        )
-
-                        board[i][j] = '_'
-                    }
-                }
-            }
-            return best
-        }
-    }
-
-    fun findBestMove(board: List<MutableList<Char>>): Move {
-        var bestVal = Int.MIN_VALUE
-        var bestMove = Move(
-            -1,
-            -1
-        )
-
-        for (i in 0..2) {
-            for (j in 0..2) {
-                if (board[i][j] == '_') {
-                    board[i][j] = 'X'
-                    val moveVal = minimax(
-                        board,
-                        0,
-                        false
-                    )
-
-                    board[i][j] = '_'
-
-                    if (moveVal > bestVal) {
-                        bestMove = Move(
-                            i,
-                            j
-                        )
-                        bestVal = moveVal
-                    }
-                }
-            }
-        }
-        return bestMove
-    }
-
-    private fun evaluate(board: List<MutableList<Char>>): Int {
-        for (row in 0..2) {
-            if (board[row][0] == board[row][1] &&
-                board[row][1] == board[row][2]
-            ) {
-                if (board[row][0] == 'X') return 10
-                if (board[row][0] == 'O') return -10
-            }
-        }
-        for (col in 0..2) {
-            if (board[0][col] == board[1][col] &&
-                board[1][col] == board[2][col]
-            ) {
-                if (board[0][col] == 'X') return 10
-                if (board[0][col] == 'O') return -10
-            }
-        }
-        if (board[0][0] == board[1][1] &&
-            board[1][1] == board[2][2]
-        ) {
-            if (board[0][0] == 'X') return 10
-            if (board[0][0] == 'O') return -10
-        }
-        if (board[0][2] == board[1][1] &&
-            board[1][1] == board[2][0]
-        ) {
-            if (board[0][2] == 'X') return 10
-            if (board[0][2] == 'O') return -10
-        }
-
-        return 0
-    }
-
-    private fun isMovesLeft(board: List<MutableList<Char>>): Boolean {
-        for (row in board) {
-            for (cell in row) {
-                if (cell == '_') return true
-            }
-        }
-        return false
+        _xoList.value = MutableList(3) { MutableList(3) { '_' } }
+        _xoQueue.clear()
+        _turnNumber = 0
     }
 }

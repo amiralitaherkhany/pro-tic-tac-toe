@@ -32,7 +32,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Replay
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -70,12 +69,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameScreen(
     gameViewModel: GameViewModel,
     navController: NavController,
 ) {
+    val isGameFinished by gameViewModel.isGameFinished.collectAsState()
+    val winnerTitle by gameViewModel.winnerTitle.collectAsState()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
@@ -91,7 +91,7 @@ fun GameScreen(
             )
 
             AnimatedVisibility(
-                visible = gameViewModel.isGameFinished,
+                visible = isGameFinished,
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable { }
@@ -103,7 +103,7 @@ fun GameScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        gameViewModel.winnerTitle,
+                        winnerTitle,
                         style = MaterialTheme.typography.headlineMedium.plus(
                             TextStyle(
                                 color = MaterialTheme.colorScheme.primary,
@@ -356,6 +356,10 @@ fun Board(
     viewModel: GameViewModel,
 ) {
     val isTurnX by viewModel.isTurnX.collectAsState()
+    val board by viewModel.xoList.collectAsState()
+    val isGameFinished by viewModel.isGameFinished.collectAsState()
+    val isGoingToDeleteList by viewModel.isGoingToDeleteList.collectAsState()
+
     Box(
         modifier = modifier
             .fillMaxHeight(0.65f),
@@ -511,7 +515,7 @@ fun Board(
                         ),
                     ),
             ) {
-                items(viewModel.xoList.flatten().size) { index ->
+                items(board.flatten().size) { index ->
                     Surface(
                         color = MaterialTheme.colorScheme.secondary,
                         border = BorderStroke(
@@ -523,7 +527,7 @@ fun Board(
                             .clickable {
                                 val row = index / 3
                                 val column = index % 3
-                                if (viewModel.xoList[row][column] != '_' || viewModel.isGameFinished || (if (viewModel.isAi) isTurnX else false)) {
+                                if (board[row][column] != '_' || isGameFinished || (if (viewModel.isAi) isTurnX else false)) {
                                     return@clickable
                                 }
                                 CoroutineScope(Dispatchers.Main).launch {
@@ -538,11 +542,11 @@ fun Board(
                     ) {
                         val row = index / 3
                         val column = index % 3
-                        when (viewModel.xoList[row][column]) {
+                        when (board[row][column]) {
                             'X' -> {
                                 XoElement(
                                     isX = true,
-                                    isBlinking = viewModel.isGoingToDeleteList[row][column],
+                                    isBlinking = isGoingToDeleteList[row][column],
                                     isAi = viewModel.isAi,
                                 )
                             }
@@ -550,7 +554,7 @@ fun Board(
                             'O' -> {
                                 XoElement(
                                     isX = false,
-                                    isBlinking = viewModel.isGoingToDeleteList[row][column],
+                                    isBlinking = isGoingToDeleteList[row][column],
                                     isAi = viewModel.isAi,
                                 )
                             }
