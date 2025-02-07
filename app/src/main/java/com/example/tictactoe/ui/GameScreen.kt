@@ -39,6 +39,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -205,6 +206,7 @@ fun MainLayout(
     modifier: Modifier,
     navController: NavController,
 ) {
+    val isTurnX by viewModel.isTurnX.collectAsState()
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -218,7 +220,7 @@ fun MainLayout(
 
 
         AnimatedVisibility(
-            visible = viewModel.isTurnX.not() or viewModel.isAi,
+            visible = isTurnX.not() or viewModel.isAi,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
         ) {
@@ -228,7 +230,7 @@ fun MainLayout(
                     .fillMaxHeight(0.15f)
             ) {
                 Text(
-                    if (viewModel.isTurnX) (if (viewModel.isAi) "X" else "O") else "O",
+                    if (isTurnX) (if (viewModel.isAi) "X" else "O") else "O",
                     style = MaterialTheme.typography.headlineMedium.plus(
                         TextStyle(
                             fontSize = 50.sp
@@ -237,7 +239,7 @@ fun MainLayout(
                     color = MaterialTheme.colorScheme.primary,
                 )
                 Text(
-                    if (viewModel.isAi.not()) "Your Move" else (if (viewModel.isTurnX) "AI’s Move" else "Your Move"),
+                    if (viewModel.isAi.not()) "Your Move" else (if (isTurnX) "AI’s Move" else "Your Move"),
                     style = MaterialTheme.typography.bodyLarge.plus(
                         TextStyle(
                             fontSize = 20.sp,
@@ -250,7 +252,7 @@ fun MainLayout(
 
         if (viewModel.isAi.not()) {
             AnimatedVisibility(
-                visible = viewModel.isTurnX,
+                visible = isTurnX,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
             ) {
@@ -271,7 +273,7 @@ fun MainLayout(
                     )
 
                     Text(
-                        if (viewModel.isTurnX) "X" else (if (viewModel.isAi) "O" else "X"),
+                        if (isTurnX) "X" else (if (viewModel.isAi) "O" else "X"),
                         style = MaterialTheme.typography.headlineMedium.plus(
                             TextStyle(
                                 fontSize = 50.sp
@@ -306,7 +308,7 @@ fun MainLayout(
                 icon = Icons.Filled.Replay,
                 onClick = {
                     CoroutineScope(Dispatchers.Main).launch {
-                        if (viewModel.isAi.not() or (viewModel.isAi and viewModel.isTurnX.not())) viewModel.resetGame()
+                        if (viewModel.isAi.not() or (viewModel.isAi and isTurnX.not())) viewModel.resetGame()
                     }
                 },
             )
@@ -353,6 +355,7 @@ fun Board(
     modifier: Modifier,
     viewModel: GameViewModel,
 ) {
+    val isTurnX by viewModel.isTurnX.collectAsState()
     Box(
         modifier = modifier
             .fillMaxHeight(0.65f),
@@ -362,7 +365,7 @@ fun Board(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .alpha(if (viewModel.isTurnX) 0.25f else 1f),
+                    .alpha(if (isTurnX) 0.25f else 1f),
             ) {
                 Text(
                     "Player 1 - O",
@@ -393,7 +396,7 @@ fun Board(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .alpha(if (viewModel.isTurnX.not()) 0.25f else 1f)
+                    .alpha(if (isTurnX.not()) 0.25f else 1f)
             ) {
                 Image(
                     painter = painterResource(R.drawable.opponent_image),
@@ -423,7 +426,7 @@ fun Board(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .alpha(if (viewModel.isTurnX) 0.25f else 1f)
+                    .alpha(if (isTurnX) 0.25f else 1f)
             ) {
                 Text(
                     "You - O",
@@ -452,7 +455,7 @@ fun Board(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .alpha(if (viewModel.isTurnX.not()) 0.25f else 1f)
+                    .alpha(if (isTurnX.not()) 0.25f else 1f)
             ) {
                 Text(
                     "Game AI - X",
@@ -520,7 +523,7 @@ fun Board(
                             .clickable {
                                 val row = index / 3
                                 val column = index % 3
-                                if (viewModel.xoList[row][column] != '_' || viewModel.isGameFinished || (if (viewModel.isAi) viewModel.isTurnX else false)) {
+                                if (viewModel.xoList[row][column] != '_' || viewModel.isGameFinished || (if (viewModel.isAi) isTurnX else false)) {
                                     return@clickable
                                 }
                                 CoroutineScope(Dispatchers.Main).launch {

@@ -7,14 +7,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 
 class GameViewModel(
     var isPro: Boolean,
     var isAi: Boolean
 ) : ViewModel() {
+    private val _isTurnX = MutableStateFlow(false)
+    val isTurnX = _isTurnX.asStateFlow()
     private var turnNumber = 0
-    var isTurnX by mutableStateOf(false)
     var isGameFinished by mutableStateOf(false)
     var winnerTitle by mutableStateOf("")
     var xWins by mutableIntStateOf(0)
@@ -30,7 +33,7 @@ class GameViewModel(
     suspend fun performNewMove(
         move: Move
     ) {
-        xoList[move.row][move.column] = if (isTurnX) 'X' else 'O'
+        xoList[move.row][move.column] = if (isTurnX.value) 'X' else 'O'
 
         if (isPro) {
             isGoingToDeleteList[move.row][move.column] = false
@@ -49,7 +52,7 @@ class GameViewModel(
 
 
         checkGameStatus()
-        isTurnX = !isTurnX
+        _isTurnX.value = !_isTurnX.value
         if (isAi) performAiMove()
     }
 
@@ -80,7 +83,7 @@ class GameViewModel(
                 }
             }
             checkGameStatus()
-            isTurnX = !isTurnX
+            _isTurnX.value = !_isTurnX.value
         }
     }
 
@@ -139,7 +142,7 @@ class GameViewModel(
         isGameFinished = false
         clearGame()
         winnerTitle = ""
-        if (isAi && isTurnX) performAiMove()
+        if (isAi && _isTurnX.value) performAiMove()
     }
 
     private fun clearGame() {
