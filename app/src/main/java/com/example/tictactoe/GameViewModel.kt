@@ -10,8 +10,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class GameViewModel(
-    private var isPro: Boolean,
-    private var isAi: Boolean
+    var isPro: Boolean,
+    var isAi: Boolean
 ) : ViewModel() {
     private var turnNumber = 0
     var isTurnX by mutableStateOf(false)

@@ -45,8 +45,10 @@ fun MyApp() {
             )
         ) { backStackEntry ->
             GameScreen(
-                isPro = backStackEntry.arguments?.getBoolean("isPro")!!,
-                isAi = backStackEntry.arguments?.getBoolean("isAi")!!,
+                gameViewModel = GameViewModel(
+                    isPro = backStackEntry.arguments?.getBoolean("isPro")!!,
+                    isAi = backStackEntry.arguments?.getBoolean("isAi")!!,
+                ),
                 navController = navController,
             )
         }

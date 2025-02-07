@@ -72,14 +72,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameScreen(
-    isPro: Boolean,
-    isAi: Boolean,
+    gameViewModel: GameViewModel,
     navController: NavController,
 ) {
-    val gameViewModel = GameViewModel(
-        isPro,
-        isAi
-    )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
@@ -91,7 +86,6 @@ fun GameScreen(
                 modifier = Modifier
                     .padding(innerPadding),
                 viewModel = gameViewModel,
-                isAi = isAi,
                 navController = navController
             )
 
@@ -209,7 +203,6 @@ fun MiniCustomButton(
 fun MainLayout(
     viewModel: GameViewModel,
     modifier: Modifier,
-    isAi: Boolean,
     navController: NavController,
 ) {
     Box(
@@ -219,14 +212,13 @@ fun MainLayout(
         Board(
             modifier = Modifier.align(Alignment.Center),
             viewModel = viewModel,
-            isAi = isAi
         )
 
 
 
 
         AnimatedVisibility(
-            visible = viewModel.isTurnX.not() or isAi,
+            visible = viewModel.isTurnX.not() or viewModel.isAi,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
         ) {
@@ -236,7 +228,7 @@ fun MainLayout(
                     .fillMaxHeight(0.15f)
             ) {
                 Text(
-                    if (viewModel.isTurnX) (if (isAi) "X" else "O") else "O",
+                    if (viewModel.isTurnX) (if (viewModel.isAi) "X" else "O") else "O",
                     style = MaterialTheme.typography.headlineMedium.plus(
                         TextStyle(
                             fontSize = 50.sp
@@ -245,7 +237,7 @@ fun MainLayout(
                     color = MaterialTheme.colorScheme.primary,
                 )
                 Text(
-                    if (isAi.not()) "Your Move" else (if (viewModel.isTurnX) "AI’s Move" else "Your Move"),
+                    if (viewModel.isAi.not()) "Your Move" else (if (viewModel.isTurnX) "AI’s Move" else "Your Move"),
                     style = MaterialTheme.typography.bodyLarge.plus(
                         TextStyle(
                             fontSize = 20.sp,
@@ -256,7 +248,7 @@ fun MainLayout(
             }
         }
 
-        if (isAi.not()) {
+        if (viewModel.isAi.not()) {
             AnimatedVisibility(
                 visible = viewModel.isTurnX,
                 modifier = Modifier
@@ -279,7 +271,7 @@ fun MainLayout(
                     )
 
                     Text(
-                        if (viewModel.isTurnX) "X" else (if (isAi) "O" else "X"),
+                        if (viewModel.isTurnX) "X" else (if (viewModel.isAi) "O" else "X"),
                         style = MaterialTheme.typography.headlineMedium.plus(
                             TextStyle(
                                 fontSize = 50.sp
@@ -314,7 +306,7 @@ fun MainLayout(
                 icon = Icons.Filled.Replay,
                 onClick = {
                     CoroutineScope(Dispatchers.Main).launch {
-                        if (isAi.not() or (isAi and viewModel.isTurnX.not())) viewModel.resetGame()
+                        if (viewModel.isAi.not() or (viewModel.isAi and viewModel.isTurnX.not())) viewModel.resetGame()
                     }
                 },
             )
@@ -360,13 +352,12 @@ fun XoElement(
 fun Board(
     modifier: Modifier,
     viewModel: GameViewModel,
-    isAi: Boolean,
 ) {
     Box(
         modifier = modifier
             .fillMaxHeight(0.65f),
     ) {
-        if (isAi.not()) {
+        if (viewModel.isAi.not()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -397,7 +388,7 @@ fun Board(
         }
 
 
-        if (isAi.not()) {
+        if (viewModel.isAi.not()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -427,7 +418,7 @@ fun Board(
                 )
             }
         }
-        if (isAi) {
+        if (viewModel.isAi) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -456,7 +447,7 @@ fun Board(
                 )
             }
         }
-        if (isAi) {
+        if (viewModel.isAi) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -529,7 +520,7 @@ fun Board(
                             .clickable {
                                 val row = index / 3
                                 val column = index % 3
-                                if (viewModel.xoList[row][column] != '_' || viewModel.isGameFinished || (if (isAi) viewModel.isTurnX else false)) {
+                                if (viewModel.xoList[row][column] != '_' || viewModel.isGameFinished || (if (viewModel.isAi) viewModel.isTurnX else false)) {
                                     return@clickable
                                 }
                                 CoroutineScope(Dispatchers.Main).launch {
@@ -549,7 +540,7 @@ fun Board(
                                 XoElement(
                                     isX = true,
                                     isBlinking = viewModel.isGoingToDeleteList[row][column],
-                                    isAi = isAi,
+                                    isAi = viewModel.isAi,
                                 )
                             }
 
@@ -557,7 +548,7 @@ fun Board(
                                 XoElement(
                                     isX = false,
                                     isBlinking = viewModel.isGoingToDeleteList[row][column],
-                                    isAi = isAi,
+                                    isAi = viewModel.isAi,
                                 )
                             }
                         }
