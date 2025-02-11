@@ -1,4 +1,4 @@
-package com.example.tictactoe.ui.theme
+package com.amirali_apps.tictactoe.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -10,7 +10,7 @@ private val DarkColorScheme = darkColorScheme(
     primary = primary,
     secondary = secondary,
     secondaryContainer = secondaryBackground,
-    )
+)
 private val LightColorScheme = lightColorScheme(
 )
 

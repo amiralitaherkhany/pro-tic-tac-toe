@@ -1,4 +1,4 @@
-package com.example.tictactoe
+package com.amirali_apps.tictactoe
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,9 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.tictactoe.ui.GameModeSelectionScreen
-import com.example.tictactoe.ui.GameScreen
-import com.example.tictactoe.ui.theme.TicTacToeTheme
+import com.amirali_apps.tictactoe.ui.GameModeSelectionScreen
+import com.amirali_apps.tictactoe.ui.GameScreen
+import com.amirali_apps.tictactoe.ui.theme.TicTacToeTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

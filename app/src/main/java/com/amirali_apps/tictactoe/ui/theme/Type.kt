@@ -1,4 +1,4 @@
-package com.example.tictactoe.ui.theme
+package com.amirali_apps.tictactoe.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.tictactoe.R
+import com.amirali_apps.tictactoe.R
 
 val Array = FontFamily(
     Font(

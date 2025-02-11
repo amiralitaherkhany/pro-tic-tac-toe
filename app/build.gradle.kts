@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.tictactoe"
+    namespace = "com.amirali_apps.tictactoe"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.tictactoe"
+        applicationId = "com.amirali_apps.tictactoe"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

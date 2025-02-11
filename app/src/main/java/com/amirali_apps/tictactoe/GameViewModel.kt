@@ -1,4 +1,4 @@
-package com.example.tictactoe
+package com.amirali_apps.tictactoe
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers

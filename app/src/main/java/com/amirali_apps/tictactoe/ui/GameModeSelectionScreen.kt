@@ -1,4 +1,4 @@
-package com.example.tictactoe.ui
+package com.amirali_apps.tictactoe.ui
 
 import android.view.MotionEvent
 import androidx.compose.foundation.BorderStroke
@@ -44,7 +44,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.tictactoe.R
+import com.amirali_apps.tictactoe.R
 
 @Composable
 fun GameModeSelectionScreen(navController: NavController) {

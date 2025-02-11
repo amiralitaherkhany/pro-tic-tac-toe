@@ -1,4 +1,4 @@
-package com.example.tictactoe
+package com.amirali_apps.tictactoe
 
 class TicTacToeAi {
     private fun minimax(
