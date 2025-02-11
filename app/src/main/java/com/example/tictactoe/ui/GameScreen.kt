@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -239,7 +240,7 @@ fun MainLayout(
                     color = MaterialTheme.colorScheme.primary,
                 )
                 Text(
-                    if (viewModel.isAi.not()) "Your Move" else (if (isTurnX) "AI’s Move" else "Your Move"),
+                    if (viewModel.isAi.not()) "Your Move" else (if (isTurnX) stringResource(R.string.ai_s_move) else stringResource(R.string.your_move)),
                     style = MaterialTheme.typography.bodyLarge.plus(
                         TextStyle(
                             fontSize = 20.sp,
@@ -262,7 +263,7 @@ fun MainLayout(
                         .fillMaxHeight(0.15f)
                 ) {
                     Text(
-                        "Your Move",
+                        stringResource(R.string.your_move),
                         style = MaterialTheme.typography.bodyLarge.plus(
                             TextStyle(
                                 fontSize = 20.sp,
@@ -372,7 +373,7 @@ fun Board(
                     .alpha(if (isTurnX) 0.25f else 1f),
             ) {
                 Text(
-                    "Player 1 - O",
+                    stringResource(R.string.player_1_o),
                     style = MaterialTheme.typography.bodyMedium.plus(
                         TextStyle(
                             fontWeight = FontWeight.Normal,
@@ -413,7 +414,7 @@ fun Board(
                     contentScale = ContentScale.Crop,
                 )
                 Text(
-                    "Player 2 - X",
+                    stringResource(R.string.player_2_x),
                     modifier = Modifier.rotate(180f),
                     style = MaterialTheme.typography.bodyMedium.plus(
                         TextStyle(
@@ -433,7 +434,7 @@ fun Board(
                     .alpha(if (isTurnX) 0.25f else 1f)
             ) {
                 Text(
-                    "You - O",
+                    stringResource(R.string.you_o),
                     style = MaterialTheme.typography.bodyMedium.plus(
                         TextStyle(
                             fontWeight = FontWeight.Normal,
@@ -462,7 +463,7 @@ fun Board(
                     .alpha(if (isTurnX.not()) 0.25f else 1f)
             ) {
                 Text(
-                    "Game AI - X",
+                    stringResource(R.string.game_ai_x),
                     style = MaterialTheme.typography.bodyMedium.plus(
                         TextStyle(
                             fontWeight = FontWeight.Normal,

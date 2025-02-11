@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -107,7 +108,7 @@ fun GameModeSelectionScreen(navController: NavController) {
                             .weight(0.35f)
                     ) {
                         Text(
-                            "Select Mode",
+                            stringResource(R.string.select_mode),
                             style = MaterialTheme.typography.bodyMedium.plus(
                                 TextStyle(
                                     fontSize = 18.sp
@@ -134,7 +135,7 @@ fun GameModeSelectionScreen(navController: NavController) {
                                 onClick = {
                                     selectedModeChip = "Classic"
                                 },
-                                label = { Text(text = "Classic") },
+                                label = { Text(text = stringResource(R.string.classic)) },
                                 colors = FilterChipDefaults.filterChipColors(
                                     containerColor = Color.White,
                                     selectedLabelColor = Color.White,
@@ -175,7 +176,7 @@ fun GameModeSelectionScreen(navController: NavController) {
                                 onClick = {
                                     selectedModeChip = "Pro"
                                 },
-                                label = { Text(text = "Pro") },
+                                label = { Text(text = stringResource(R.string.pro)) },
                                 colors = FilterChipDefaults.filterChipColors(
                                     containerColor = Color.White,
                                     selectedLabelColor = Color.White,
@@ -197,7 +198,7 @@ fun GameModeSelectionScreen(navController: NavController) {
                             )
                         }
                         Text(
-                            "Select Opponent",
+                            stringResource(R.string.select_opponent),
                             style = MaterialTheme.typography.bodyMedium.plus(
                                 TextStyle(
                                     fontSize = 18.sp
@@ -231,7 +232,7 @@ fun GameModeSelectionScreen(navController: NavController) {
                                 onClick = {
                                     selectedOponentChip = "Friend"
                                 },
-                                label = { Text(text = "vs " + "Friend") },
+                                label = { Text(text = stringResource(R.string.friend)) },
                                 colors = FilterChipDefaults.filterChipColors(
                                     containerColor = Color.White,
                                     selectedLabelColor = Color.White,
@@ -269,7 +270,7 @@ fun GameModeSelectionScreen(navController: NavController) {
                                 onClick = {
                                     selectedOponentChip = "Ai"
                                 },
-                                label = { Text(text = "vs " + "Ai") },
+                                label = { Text(text = stringResource(R.string.ai)) },
                                 colors = FilterChipDefaults.filterChipColors(
                                     containerColor = Color.White,
                                     selectedLabelColor = Color.White,
@@ -373,7 +374,7 @@ fun CustomButton(
                     .padding(4.dp),
             ) {
                 Text(
-                    "Start Game",
+                    stringResource(R.string.start_game),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .fillMaxSize()
