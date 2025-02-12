@@ -24,16 +24,21 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+enum class GameScreens {
+    GameModeSelection,
+    Game,
+}
+
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
     NavHost(
         navController,
-        startDestination = "gameModeSelection"
+        startDestination = GameScreens.GameModeSelection.name
     ) {
-        composable("gameModeSelection") { GameModeSelectionScreen(navController) }
+        composable(GameScreens.GameModeSelection.name) { GameModeSelectionScreen(navController) }
         composable(
-            "gameScreen/{isPro}/{isAi}",
+            "${GameScreens.Game.name}/{isPro}/{isAi}",
             arguments = listOf(
                 navArgument("isPro") { type = NavType.BoolType },
                 navArgument("isAi") { type = NavType.BoolType }
@@ -49,3 +54,5 @@ fun MyApp() {
         }
     }
 }
+
+

@@ -60,6 +60,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.amirali_apps.tictactoe.GameScreens
 import com.amirali_apps.tictactoe.GameViewModel
 import com.amirali_apps.tictactoe.Move
 import com.amirali_apps.tictactoe.R
@@ -104,7 +105,7 @@ fun GameScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        winnerTitle,
+                        stringResource(winnerTitle ?: R.string.empty_string),
                         style = MaterialTheme.typography.headlineMedium.plus(
                             TextStyle(
                                 color = MaterialTheme.colorScheme.primary,
@@ -129,7 +130,7 @@ fun GameScreen(
                         Spacer(Modifier.width(24.dp))
                         MiniCustomButton(
                             onClick = {
-                                navController.navigate("gameModeSelection") {
+                                navController.navigate(GameScreens.GameModeSelection.name) {
                                     popUpTo(0) { inclusive = true }
                                 }
                             },
@@ -299,7 +300,7 @@ fun MainLayout(
             MiniCustomButton(
                 icon = Icons.Filled.Close,
                 onClick = {
-                    navController.navigate("gameModeSelection") {
+                    navController.navigate(GameScreens.GameModeSelection.name) {
                         popUpTo(0) { inclusive = true }
                     }
                 },
@@ -360,6 +361,8 @@ fun Board(
     val board by viewModel.xoList.collectAsState()
     val isGameFinished by viewModel.isGameFinished.collectAsState()
     val isGoingToDeleteList by viewModel.isGoingToDeleteList.collectAsState()
+    val xWins by viewModel.xWins.collectAsState()
+    val oWins by viewModel.oWins.collectAsState()
 
     Box(
         modifier = modifier
@@ -373,7 +376,10 @@ fun Board(
                     .alpha(if (isTurnX) 0.25f else 1f),
             ) {
                 Text(
-                    stringResource(R.string.player_1_o),
+                    stringResource(
+                        R.string.player_o,
+                        oWins
+                    ),
                     style = MaterialTheme.typography.bodyMedium.plus(
                         TextStyle(
                             fontWeight = FontWeight.Normal,
@@ -414,7 +420,10 @@ fun Board(
                     contentScale = ContentScale.Crop,
                 )
                 Text(
-                    stringResource(R.string.player_2_x),
+                    stringResource(
+                        R.string.player_x,
+                        xWins
+                    ),
                     modifier = Modifier.rotate(180f),
                     style = MaterialTheme.typography.bodyMedium.plus(
                         TextStyle(
@@ -434,7 +443,10 @@ fun Board(
                     .alpha(if (isTurnX) 0.25f else 1f)
             ) {
                 Text(
-                    stringResource(R.string.you_o),
+                    stringResource(
+                        R.string.you_o,
+                        oWins
+                    ),
                     style = MaterialTheme.typography.bodyMedium.plus(
                         TextStyle(
                             fontWeight = FontWeight.Normal,
@@ -463,7 +475,10 @@ fun Board(
                     .alpha(if (isTurnX.not()) 0.25f else 1f)
             ) {
                 Text(
-                    stringResource(R.string.game_ai_x),
+                    stringResource(
+                        R.string.game_ai,
+                        xWins
+                    ),
                     style = MaterialTheme.typography.bodyMedium.plus(
                         TextStyle(
                             fontWeight = FontWeight.Normal,

@@ -44,6 +44,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.amirali_apps.tictactoe.GameScreens
 import com.amirali_apps.tictactoe.R
 
 @Composable
@@ -336,7 +337,7 @@ fun CustomButton(
                         isPressed = false
                         val isPro = selectedModeChip == "Pro"
                         val isAi = selectedOponentChip == "Ai"
-                        navController.navigate("gameScreen/${isPro}/${isAi}")
+                        navController.navigate("${GameScreens.Game.name}/${isPro}/${isAi}")
                     }
                 }
                 true

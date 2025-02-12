@@ -20,7 +20,7 @@ class GameViewModel(
     val isTurnX = _isTurnX.asStateFlow()
     private val _isGameFinished = MutableStateFlow(false)
     val isGameFinished = _isGameFinished.asStateFlow()
-    private val _winnerTitle = MutableStateFlow("")
+    private val _winnerTitle = MutableStateFlow<Int?>(null)
     val winnerTitle = _winnerTitle.asStateFlow()
     private val _xWins = MutableStateFlow(0)
     val xWins = _xWins.asStateFlow()
@@ -178,17 +178,17 @@ class GameViewModel(
     private fun placeWinner(winner: Char?) {
         when (winner) {
             'X' -> {
-                _winnerTitle.value = if (isAi) "You lost :(" else "Winner is X"
+                _winnerTitle.value = if (isAi) R.string.you_lost else R.string.winner_is_x
                 _xWins.value++
             }
 
             'O' -> {
-                _winnerTitle.value = if (isAi) "You won :D" else "Winner is O"
+                _winnerTitle.value = if (isAi) R.string.you_won_d else R.string.winner_is_o
                 _oWins.value++
             }
 
             null -> {
-                _winnerTitle.value = "Draw, play again!"
+                _winnerTitle.value = R.string.draw_play_again
                 _xWins.value++
                 _oWins.value++
             }
@@ -198,7 +198,7 @@ class GameViewModel(
     suspend fun resetGame() {
         _isGameFinished.value = false
         clearGame()
-        _winnerTitle.value = ""
+        _winnerTitle.value = null
         if (isAi && _isTurnX.value) performAiMove()
     }
 
