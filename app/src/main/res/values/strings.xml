@@ -7,10 +7,10 @@
     <string name="pro">Pro</string>
     <string name="classic">Classic</string>
     <string name="select_mode">Select Mode</string>
-    <string name="game_ai">Game AI - %1$d wins</string>
+    <string name="game_ai">AI - %1$d wins</string>
     <string name="you_o">You - %1$d wins</string>
-    <string name="player_x">Player X - %1$d wins</string>
-    <string name="player_o">Player O - %1$d wins</string>
+    <string name="player_x">X - %1$d wins</string>
+    <string name="player_o">O - %1$d wins</string>
     <string name="your_move">Your Move</string>
     <string name="ai_s_move">AI’s Move</string>
     <string name="you_lost">You lost :(</string>

@@ -489,7 +489,7 @@ fun Board(
                 )
                 Image(
                     painter = painterResource(R.drawable.ai_image),
-                    contentDescription = "Self Image",
+                    contentDescription = "Ai Image",
                     modifier = Modifier
                         .size(
                             100.dp,
