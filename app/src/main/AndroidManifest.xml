@@ -9,7 +9,7 @@
         android:icon="@mipmap/tic_tac_toe_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/tic_tac_toe_icon"
-        android:supportsRtl="true"
+        android:supportsRtl="false"
         android:theme="@style/Theme.TicTacToe"
         tools:targetApi="31">
         <activity

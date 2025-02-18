@@ -13,10 +13,17 @@ import androidx.navigation.navArgument
 import com.amirali_apps.tictactoe.ui.GameModeSelectionScreen
 import com.amirali_apps.tictactoe.ui.GameScreen
 import com.amirali_apps.tictactoe.ui.theme.TicTacToeTheme
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val config = resources.configuration
+        config.setLocale(Locale.ENGLISH)
+        resources.updateConfiguration(
+            config,
+            resources.displayMetrics
+        )
         enableEdgeToEdge()
         setContent {
             TicTacToeTheme {
