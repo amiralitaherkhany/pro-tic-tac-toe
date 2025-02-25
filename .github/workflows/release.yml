@@ -17,6 +17,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Download BundleSigner
+        run: |
+          curl -LO https://github.com/cafebazaar/bundle-signer/releases/download/v0.1.13/bundlesigner-0.1.13.jar
+
       - name: Grant Execute Permission to Gradle
         run: chmod +x gradlew
 
@@ -39,12 +43,27 @@ jobs:
             -storepass "$SIGNING_STORE_PASSWORD" \
             -keypass "$SIGNING_KEY_PASSWORD" \
             app/build/outputs/bundle/release/app-release.aab "$SIGNING_KEY_ALIAS"
-      
+
+      - name: Generate Bin File with BundleSigner
+        run: |
+          java -jar bundlesigner-0.1.13.jar genbin \
+            --bundle app/build/outputs/bundle/release/app-release.aab \
+            --bin app-release.bin \
+            --v2-signing-enabled true \
+            --v3-signing-enabled false \
+            --ks release.jks -v
+
       - name: Upload Signed AAB as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: signed-aab
           path: app/build/outputs/bundle/release/app-release.aab
+
+      - name: Upload Bin File as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-bin
+          path: app-release.bin
 
   publish:
     runs-on: ubuntu-latest
