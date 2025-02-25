@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.amirali_apps.tictactoe.ui.GameModeSelectionScreen
 import com.amirali_apps.tictactoe.ui.GameScreen
+import com.amirali_apps.tictactoe.ui.GameViewModel
 import com.amirali_apps.tictactoe.ui.theme.TicTacToeTheme
 import java.util.Locale
 

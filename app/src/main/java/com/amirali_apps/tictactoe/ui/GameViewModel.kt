@@ -1,6 +1,10 @@
-package com.amirali_apps.tictactoe
+package com.amirali_apps.tictactoe.ui
 
 import androidx.lifecycle.ViewModel
+import com.amirali_apps.tictactoe.Move
+import com.amirali_apps.tictactoe.R
+import com.amirali_apps.tictactoe.TicTacToeAi
+import com.amirali_apps.tictactoe.TicTacToeProAi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

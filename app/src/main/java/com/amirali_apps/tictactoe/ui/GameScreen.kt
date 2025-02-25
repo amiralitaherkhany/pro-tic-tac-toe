@@ -61,7 +61,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.amirali_apps.tictactoe.GameScreens
-import com.amirali_apps.tictactoe.GameViewModel
 import com.amirali_apps.tictactoe.Move
 import com.amirali_apps.tictactoe.R
 import com.amirali_apps.tictactoe.ui.theme.accent1
