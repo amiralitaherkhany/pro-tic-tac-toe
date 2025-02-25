@@ -180,6 +180,7 @@ jobs:
               --data '{
                 "changelog_en": "",
                 "changelog_fa": "${{ github.event.inputs.changelog_fa }}",
+                "staged_rollout_percentage": 100,
                 "developer_note": "",
                 "auto_publish": true
               }')
