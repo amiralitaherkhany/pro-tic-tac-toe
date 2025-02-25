@@ -49,7 +49,7 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: |
           java -jar bundlesigner-0.1.13.jar genbin \
-               --bundle app-release.aab \
+               --bundle app/build/outputs/bundle/release/app-release.aab \
                --bin . \
                --v2-signing-enabled true \
                --v3-signing-enabled false \
