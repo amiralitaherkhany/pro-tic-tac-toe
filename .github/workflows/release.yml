@@ -45,13 +45,20 @@ jobs:
         with:
           name: signed-aab
           path: app/build/outputs/bundle/release/app-release.aab
+
   publish:
     runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+
+      - name: Download Signed AAB
+        uses: actions/download-artifact@v4
+        with:
+          name: signed-aab
+          path: app/build/outputs/bundle/release/
+
       - name:  Create New Release in Cafe Bazaar
         run: |
          curl --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/' \
@@ -63,5 +70,3 @@ jobs:
               --header 'CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}' \
               --header 'Content-Type: multipart/form-data' \
               --form 'aab=@app/build/outputs/bundle/release/app-release.aab'
-
-              
