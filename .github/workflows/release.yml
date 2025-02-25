@@ -1,4 +1,4 @@
-name: Build Signed AAB
+name: Build AAB And Publish To Bazaar
 
 on:
   workflow_dispatch:  
@@ -16,6 +16,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+
+      - name: Download BundleSigner
+        run: |
+          curl -LO https://github.com/cafebazaar/bundle-signer/releases/download/v0.1.13/bundlesigner-0.1.13.jar
 
       - name: Grant Execute Permission to Gradle
         run: chmod +x gradlew
@@ -40,8 +44,105 @@ jobs:
             -keypass "$SIGNING_KEY_PASSWORD" \
             app/build/outputs/bundle/release/app-release.aab "$SIGNING_KEY_ALIAS"
 
+      - name: Generate Bin File with BundleSigner
+        env:
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        run: |
+          java -jar bundlesigner-0.1.13.jar genbin \
+               --bundle app/build/outputs/bundle/release/app-release.aab \
+               --bin . \
+               --v2-signing-enabled true \
+               --v3-signing-enabled false \
+               --ks release.jks \
+               --ks-pass pass:"$SIGNING_STORE_PASSWORD"
+
       - name: Upload Signed AAB as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: signed-aab
           path: app/build/outputs/bundle/release/app-release.aab
+
+      - name: Upload Bin File as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-bin
+          path: app-release.bin
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download Signed AAB
+        uses: actions/download-artifact@v4
+        with:
+          name: signed-aab
+          path: app/build/outputs/bundle/release/
+          
+      - name: Download Bin File
+        uses: actions/download-artifact@v4
+        with:
+          name: signed-bin
+          path: app-release.bin
+          
+      - name: Create New Release in Cafe Bazaar
+        run: |
+          response=$(curl --silent --show-error --write-out "%{http_code}" --output response.json --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/' \
+               --header 'CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}')
+
+          if [[ "$response" -ne 201 ]]; then
+              echo "❌ ایجاد انتشار جدید با مشکل مواجه شد. کد وضعیت: $response"
+              cat response.json
+              exit 1
+          fi
+
+      - name: Upload AAB To New Release
+        run: |
+          response=$(curl --silent --show-error --write-out "%{http_code}" --output response.json --verbose --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/upload-aab/' \
+              --header 'CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}' \
+              --header 'Content-Type: multipart/form-data' \
+              --form 'aab=@app/build/outputs/bundle/release/app-release.aab')
+
+          # بررسی کد وضعیت HTTP
+          http_code=$(echo $response | tail -n 1)
+          if [[ "$http_code" -ne 200 ]]; then
+              echo "❌ آپلود AAB با مشکل مواجه شد. کد وضعیت: $http_code"
+              cat response.json
+              exit 1
+          fi
+
+          # بررسی موفقیت آپلود
+          type=$(grep -o '"type": *"[^"]*' response.json | awk -F'"' '{print $4}')
+          if [[ "$type" == "success" ]]; then
+              echo "✅ آپلود موفقیت‌آمیز بود."
+          else
+              echo "❌ آپلود انجام نشد. پاسخ سرور:"
+              cat response.json
+              exit 1
+          fi
+      - name: Upload Bin To New Release
+        run: |
+          response=$(curl --silent --show-error --write-out "%{http_code}" --output response.json --verbose --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/upload-bin/' \
+              --header 'CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}' \
+              --header 'Content-Type: multipart/form-data' \
+              --form 'aab=@app-release.bin')
+
+          # بررسی کد وضعیت HTTP
+          http_code=$(echo $response | tail -n 1)
+          if [[ "$http_code" -ne 200 ]]; then
+              echo "❌ آپلود Bin با مشکل مواجه شد. کد وضعیت: $http_code"
+              cat response.json
+              exit 1
+          fi
+
+          # بررسی موفقیت آپلود
+          type=$(grep -o '"type": *"[^"]*' response.json | awk -F'"' '{print $4}')
+          if [[ "$type" == "success" ]]; then
+              echo "✅ آپلود موفقیت‌آمیز بود."
+          else
+              echo "❌ آپلود انجام نشد. پاسخ سرور:"
+              cat response.json
+              exit 1
+          fi
