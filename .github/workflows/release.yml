@@ -77,7 +77,13 @@ jobs:
         with:
           name: signed-aab
           path: app/build/outputs/bundle/release/
-
+          
+      - name: Download Bin File
+        uses: actions/download-artifact@v4
+        with:
+          name: signed-bin
+          path: app-release.bin
+          
       - name: Create New Release in Cafe Bazaar
         run: |
           response=$(curl --silent --show-error --write-out "%{http_code}" --output response.json --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/' \
