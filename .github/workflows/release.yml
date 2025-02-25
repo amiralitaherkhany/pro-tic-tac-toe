@@ -111,7 +111,7 @@ jobs:
 
           # بررسی کد وضعیت HTTP
           http_code=$(echo $response | tail -n 1)
-          if [[ "$http_code" -ne 200 ]]; then
+          if [[ "$http_code" -ne 201 ]]; then
               echo "❌ آپلود AAB با مشکل مواجه شد. کد وضعیت: $http_code"
               cat response.json
               exit 1
@@ -135,7 +135,7 @@ jobs:
 
           # بررسی کد وضعیت HTTP
           http_code=$(echo $response | tail -n 1)
-          if [[ "$http_code" -ne 200 ]]; then
+          if [[ "$http_code" -ne 201 ]]; then
               echo "❌ آپلود Bin با مشکل مواجه شد. کد وضعیت: $http_code"
               cat response.json
               exit 1
