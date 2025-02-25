@@ -122,3 +122,27 @@ jobs:
               cat response.json
               exit 1
           fi
+      - name: Upload Bin To New Release
+        run: |
+          response=$(curl --silent --show-error --write-out "%{http_code}" --output response.json --verbose --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/upload-bin/' \
+              --header 'CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}' \
+              --header 'Content-Type: multipart/form-data' \
+              --form 'aab=@app-release.bin')
+
+          # بررسی کد وضعیت HTTP
+          http_code=$(echo $response | tail -n 1)
+          if [[ "$http_code" -ne 200 ]]; then
+              echo "❌ آپلود Bin با مشکل مواجه شد. کد وضعیت: $http_code"
+              cat response.json
+              exit 1
+          fi
+
+          # بررسی موفقیت آپلود
+          type=$(grep -o '"type": *"[^"]*' response.json | awk -F'"' '{print $4}')
+          if [[ "$type" == "success" ]]; then
+              echo "✅ آپلود موفقیت‌آمیز بود."
+          else
+              echo "❌ آپلود انجام نشد. پاسخ سرور:"
+              cat response.json
+              exit 1
+          fi
