@@ -45,13 +45,16 @@ jobs:
             app/build/outputs/bundle/release/app-release.aab "$SIGNING_KEY_ALIAS"
 
       - name: Generate Bin File with BundleSigner
+        env:
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: |
           java -jar bundlesigner-0.1.13.jar genbin \
-            --bundle app/build/outputs/bundle/release/app-release.aab \
-            --bin app-release.bin \
-            --v2-signing-enabled true \
-            --v3-signing-enabled false \
-            --ks release.jks -v
+               --bundle app-release.aab \
+               --bin . \
+               --v2-signing-enabled true \
+               --v3-signing-enabled false \
+               --ks MyKey.jks \
+               --ks-pass pass:"$SIGNING_STORE_PASSWORD"
 
       - name: Upload Signed AAB as Artifact
         uses: actions/upload-artifact@v4
