@@ -2,7 +2,11 @@ name: Build AAB And Publish To Bazaar
 
 on:
   workflow_dispatch:  
-
+    inputs:
+      changelog_fa:
+        description: 'توضیحات تغییرات نسخه (فارسی)'
+        required: true
+        default: 'بهبودهای کلی و رفع مشکلات'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -146,3 +150,57 @@ jobs:
               cat response.json
               exit 1
           fi
+          
+      - name: Check Bundle Status Periodically
+        run: |
+          while true; do
+            response=$(curl --silent --request GET \
+              --url "https://api.pishkhan.cafebazaar.ir/v1/apps/releases/bundle-status/" \
+              --header "CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}")
+
+            echo "Response: $response"
+
+            # بررسی وضعیت پردازش باندل
+            state=$(echo "$response" | grep -o '"state": *"[^"]*' | awk -F'"' '{print $4}')
+
+            if [[ "$state" == "D" ]]; then
+              echo "✅ Bundle processing completed."
+              break
+            fi
+
+            echo "⏳ Bundle is still processing. Checking again in 60 seconds..."
+            sleep 60
+          done
+          
+      - name: Commit Release to Cafe Bazaar
+        run: |
+          response=$(curl --silent --show-error --write-out "%{http_code}" --output response.json --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/commit/' \
+              --header 'CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}' \
+              --header 'Content-Type: application/json' \
+              --data '{
+                "changelog_en": "",
+                "changelog_fa": "${{ github.event.inputs.changelog_fa }}",
+                "developer_note": "",
+                "staged_rollout_percentage": 0,
+                "auto_publish": true
+              }')
+
+          # بررسی کد وضعیت HTTP
+          http_code=$(tail -n 1 <<< "$response")
+          if [[ "$http_code" -ne 200 ]]; then
+              echo "❌ کامیت انتشار با مشکل مواجه شد. کد وضعیت: $http_code"
+              cat response.json
+              exit 1
+          fi
+
+          # بررسی موفقیت درخواست
+          type=$(grep -o '"type": *"[^"]*' response.json | awk -F'"' '{print $4}')
+          if [[ "$type" == "success" ]]; then
+              echo "✅ انتشار با موفقیت انجام شد."
+          else
+              echo "❌ انتشار انجام نشد. پاسخ سرور:"
+              cat response.json
+              exit 1
+          fi
+    
+          
