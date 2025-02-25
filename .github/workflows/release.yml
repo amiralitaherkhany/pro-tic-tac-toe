@@ -39,7 +39,7 @@ jobs:
             -storepass "$SIGNING_STORE_PASSWORD" \
             -keypass "$SIGNING_KEY_PASSWORD" \
             app/build/outputs/bundle/release/app-release.aab "$SIGNING_KEY_ALIAS"
-
+      
       - name: Upload Signed AAB as Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -59,14 +59,38 @@ jobs:
           name: signed-aab
           path: app/build/outputs/bundle/release/
 
-      - name:  Create New Release in Cafe Bazaar
+      - name: Create New Release in Cafe Bazaar
         run: |
-         curl --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/' \
-              --header 'CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}'
-              
-      - name:  Upload AAB To New Release
+          response=$(curl --silent --show-error --write-out "%{http_code}" --output response.json --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/' \
+               --header 'CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}')
+
+          if [[ "$response" -ne 201 ]]; then
+              echo "❌ ایجاد انتشار جدید با مشکل مواجه شد. کد وضعیت: $response"
+              cat response.json
+              exit 1
+          fi
+
+      - name: Upload AAB To New Release
         run: |
-         curl --verbose --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/upload-aab/' \
+          response=$(curl --silent --show-error --write-out "%{http_code}" --output response.json --verbose --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/upload-aab/' \
               --header 'CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}' \
               --header 'Content-Type: multipart/form-data' \
-              --form 'aab=@app/build/outputs/bundle/release/app-release.aab'
+              --form 'aab=@app/build/outputs/bundle/release/app-release.aab')
+
+          # بررسی کد وضعیت HTTP
+          http_code=$(echo $response | tail -n 1)
+          if [[ "$http_code" -ne 200 ]]; then
+              echo "❌ آپلود AAB با مشکل مواجه شد. کد وضعیت: $http_code"
+              cat response.json
+              exit 1
+          fi
+
+          # بررسی موفقیت آپلود
+          type=$(grep -o '"type": *"[^"]*' response.json | awk -F'"' '{print $4}')
+          if [[ "$type" == "success" ]]; then
+              echo "✅ آپلود موفقیت‌آمیز بود."
+          else
+              echo "❌ آپلود انجام نشد. پاسخ سرور:"
+              cat response.json
+              exit 1
+          fi
