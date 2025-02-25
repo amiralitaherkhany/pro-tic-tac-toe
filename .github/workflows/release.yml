@@ -1,4 +1,4 @@
-name: Build Signed AAB
+name: Build AAB And Publish To Bazaar
 
 on:
   workflow_dispatch:  
@@ -45,3 +45,8 @@ jobs:
         with:
           name: signed-aab
           path: app/build/outputs/bundle/release/app-release.aab
+
+      - name:  Create New Release in Cafe Bazaar
+        run: |
+         curl --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/' \
+              --header 'CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}'
