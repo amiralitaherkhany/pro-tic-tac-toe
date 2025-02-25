@@ -53,7 +53,7 @@ jobs:
                --bin . \
                --v2-signing-enabled true \
                --v3-signing-enabled false \
-               --ks MyKey.jks \
+               --ks release.jks \
                --ks-pass pass:"$SIGNING_STORE_PASSWORD"
 
       - name: Upload Signed AAB as Artifact
