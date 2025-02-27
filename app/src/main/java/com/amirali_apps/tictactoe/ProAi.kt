@@ -3,7 +3,8 @@ package com.amirali_apps.tictactoe
 class TicTacToeProAi(
     var board: List<MutableList<Char>>,
     var numberOfMoves: Int,
-    var moves: ArrayDeque<Move>
+    var moves: ArrayDeque<Move>,
+    private val maxDepth: Int
 ) {
     private fun minimax(
         inputBoard: List<MutableList<Char>>,
@@ -14,10 +15,11 @@ class TicTacToeProAi(
         var myBoard = deepCopyBoard(inputBoard)
         var myMoves = deepCopyMoves(inputMoves)
         val score = evaluate(myBoard)
+        if (depth >= maxDepth) return score
         if (score == 10) return score - depth
         if (score == -10) return score + depth
         if (isMovesLeft(myBoard).not()) return 0
-        if (depth > 7) return 0
+
 
         if (isAI) {
             var best = Int.MIN_VALUE

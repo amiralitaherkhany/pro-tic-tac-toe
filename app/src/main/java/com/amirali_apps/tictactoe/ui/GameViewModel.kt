@@ -11,9 +11,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 
+enum class AiLevel(val depth: Int) {
+    EASY(2),
+    MEDIUM(4),
+    HARD(8),
+}
+
 class GameViewModel(
     val isPro: Boolean,
-    val isAi: Boolean
+    val isAi: Boolean,
+    val aiLevel: AiLevel?,
 ) : ViewModel() {
     ///
     private var _turnNumber = 0
@@ -87,8 +94,9 @@ class GameViewModel(
                 if (isPro) TicTacToeProAi(
                     numberOfMoves = _turnNumber,
                     moves = _xoQueue,
-                    board = _xoList.value
-                ).findBestMove() else TicTacToeAi().findBestMove(board = _xoList.value)
+                    board = _xoList.value,
+                    maxDepth = aiLevel!!.depth
+                ).findBestMove() else TicTacToeAi(maxDepth = aiLevel!!.depth).findBestMove(board = _xoList.value)
             }
             updateXOList(
                 row = bestMoveAi.row,

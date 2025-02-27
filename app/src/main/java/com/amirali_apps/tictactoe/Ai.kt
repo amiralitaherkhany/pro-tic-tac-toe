@@ -1,12 +1,13 @@
 package com.amirali_apps.tictactoe
 
-class TicTacToeAi {
+class TicTacToeAi(private val maxDepth: Int) {
     private fun minimax(
         board: List<MutableList<Char>>,
         depth: Int,
         isAI: Boolean
     ): Int {
         val score = evaluate(board)
+        if (depth >= maxDepth) return score
         if (score == 10) return score - depth
         if (score == -10) return score + depth
         if (isMovesLeft(board).not()) return 0

@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.amirali_apps.tictactoe.ui.AiLevel
 import com.amirali_apps.tictactoe.ui.GameModeSelectionScreen
 import com.amirali_apps.tictactoe.ui.GameScreen
 import com.amirali_apps.tictactoe.ui.GameViewModel
@@ -48,16 +49,18 @@ fun MyApp() {
     ) {
         composable(GameScreens.GameModeSelection.name) { GameModeSelectionScreen(navController) }
         composable(
-            "${GameScreens.Game.name}/{isPro}/{isAi}",
+            "${GameScreens.Game.name}/{isPro}/{isAi}/{level}",
             arguments = listOf(
                 navArgument("isPro") { type = NavType.BoolType },
-                navArgument("isAi") { type = NavType.BoolType }
+                navArgument("isAi") { type = NavType.BoolType },
+                navArgument("level") { type = NavType.IntType },
             )
         ) { backStackEntry ->
             GameScreen(
                 gameViewModel = GameViewModel(
                     isPro = backStackEntry.arguments?.getBoolean("isPro")!!,
                     isAi = backStackEntry.arguments?.getBoolean("isAi")!!,
+                    aiLevel = if (backStackEntry.arguments?.getBoolean("isAi")!!) AiLevel.entries[backStackEntry.arguments?.getInt("level")!!] else null
                 ),
                 navController = navController,
             )
