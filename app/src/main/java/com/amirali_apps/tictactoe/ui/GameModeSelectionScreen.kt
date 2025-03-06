@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -103,7 +104,7 @@ fun FirstContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom,
     ) {
-        Spacer(Modifier.weight(0.70f))
+        Spacer(Modifier.weight(0.50f))
         Text(
             stringResource(R.string.how_do_you_want_to_play),
             style = MaterialTheme.typography.bodyMedium.plus(
@@ -116,7 +117,7 @@ fun FirstContent(
                 .wrapContentSize()
         )
         Row(
-            modifier = Modifier.weight(0.40f),
+            modifier = Modifier.weight(0.30f),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
@@ -128,7 +129,7 @@ fun FirstContent(
             )
         }
         Row(
-            modifier = Modifier.weight(0.40f),
+            modifier = Modifier.weight(0.30f),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
@@ -139,6 +140,7 @@ fun FirstContent(
                 },
             )
         }
+        Spacer(Modifier.weight(0.10f))
     }
 }
 
@@ -273,12 +275,14 @@ fun SecondContent(
                     .padding(horizontal = 20.dp)
                     .weight(0.40f)
             ) {
+                val configuration = LocalConfiguration.current
+                val screenWidthDp = configuration.screenWidthDp
                 AiLevel.entries.forEachIndexed { index, aiLevel ->
                     FilterChip(
                         modifier = Modifier
-                            .weight(0.30f)
-                            .padding(5.dp)
-                            .fillMaxHeight(0.70f),
+                            .fillMaxHeight(0.5f)
+                            .weight(0.3f)
+                            .padding(horizontal = 5.dp),
                         selected = index == selectedAiLevel,
                         onClick = {
                             selectedAiLevel = index
@@ -286,7 +290,7 @@ fun SecondContent(
                         label = {
                             Text(
                                 text = AiLevel.entries[index].name,
-                                fontSize = 10.sp
+                                fontSize = (screenWidthDp * 0.026).sp
                             )
                         },
                         leadingIcon = {

@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -362,7 +363,8 @@ fun Board(
     val isGoingToDeleteList by viewModel.isGoingToDeleteList.collectAsState()
     val xWins by viewModel.xWins.collectAsState()
     val oWins by viewModel.oWins.collectAsState()
-
+    val configuration = LocalConfiguration.current
+    val screenWidthDp = configuration.screenWidthDp
     Box(
         modifier = modifier
             .fillMaxHeight(0.65f),
@@ -382,7 +384,7 @@ fun Board(
                     style = MaterialTheme.typography.bodyMedium.plus(
                         TextStyle(
                             fontWeight = FontWeight.Normal,
-                            fontSize = 17.sp,
+                            fontSize = (screenWidthDp * 0.042).sp,
                             color = MaterialTheme.colorScheme.primary,
                         )
                     ),
@@ -392,8 +394,11 @@ fun Board(
                     contentDescription = "Self Image",
                     modifier = Modifier
                         .size(
-                            100.dp,
-                            100.dp
+                            (screenWidthDp * 0.26).dp,
+                            (screenWidthDp * 0.26).dp
+                        )
+                        .graphicsLayer(
+                            scaleX = -1f
                         ),
                     contentScale = ContentScale.Crop,
                 )
@@ -413,8 +418,12 @@ fun Board(
                     contentDescription = "Opponent Image",
                     modifier = Modifier
                         .size(
-                            100.dp,
-                            100.dp
+                            (screenWidthDp * 0.26).dp,
+                            (screenWidthDp * 0.26).dp
+                        )
+                        .graphicsLayer(
+                            rotationZ = 180f,
+                            scaleX = -1f,
                         ),
                     contentScale = ContentScale.Crop,
                 )
@@ -427,7 +436,7 @@ fun Board(
                     style = MaterialTheme.typography.bodyMedium.plus(
                         TextStyle(
                             fontWeight = FontWeight.Normal,
-                            fontSize = 17.sp,
+                            fontSize = (screenWidthDp * 0.042).sp,
                             color = MaterialTheme.colorScheme.primary,
                         )
                     ),
@@ -449,7 +458,7 @@ fun Board(
                     style = MaterialTheme.typography.bodyMedium.plus(
                         TextStyle(
                             fontWeight = FontWeight.Normal,
-                            fontSize = 17.sp,
+                            fontSize = (screenWidthDp * 0.042).sp,
                             color = MaterialTheme.colorScheme.primary,
                         )
                     ),
@@ -459,8 +468,8 @@ fun Board(
                     contentDescription = "Self Image",
                     modifier = Modifier
                         .size(
-                            100.dp,
-                            100.dp
+                            (screenWidthDp * 0.26).dp,
+                            (screenWidthDp * 0.26).dp
                         ),
                     contentScale = ContentScale.Crop,
                 )
@@ -481,7 +490,7 @@ fun Board(
                     style = MaterialTheme.typography.bodyMedium.plus(
                         TextStyle(
                             fontWeight = FontWeight.Normal,
-                            fontSize = 17.sp,
+                            fontSize = (screenWidthDp * 0.042).sp,
                             color = MaterialTheme.colorScheme.primary,
                         )
                     ),
@@ -491,8 +500,11 @@ fun Board(
                     contentDescription = "Ai Image",
                     modifier = Modifier
                         .size(
-                            100.dp,
-                            100.dp
+                            (screenWidthDp * 0.26).dp,
+                            (screenWidthDp * 0.26).dp
+                        )
+                        .graphicsLayer(
+                            scaleX = -1f
                         ),
                     contentScale = ContentScale.Crop,
                 )
