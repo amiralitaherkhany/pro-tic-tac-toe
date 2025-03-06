@@ -15,4 +15,8 @@ class GameModeSelectionViewModel : ViewModel() {
     fun onSelectModeSubmitted(isAi: Boolean) {
         _uiState.value = UiState.Settings(isAi)
     }
+
+    fun onBackPressed() {
+        _uiState.value = UiState.SelectMode
+    }
 }
