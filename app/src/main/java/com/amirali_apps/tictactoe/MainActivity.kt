@@ -75,6 +75,7 @@ class MainActivity : ComponentActivity() {
                             Uri.parse(response?.downloadUrl)
                         )
                         context.startActivity(intent)
+                        showDialog = false
                     }
                 )
             }
