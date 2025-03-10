@@ -1,6 +1,8 @@
 package com.amirali_apps.tictactoe
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -35,17 +37,24 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.Locale
 
+object LocaleHelper {
+    fun wrap(context: Context): Context {
+        val locale = Locale.ENGLISH
+        Locale.setDefault(locale)
+        val config = Configuration(context.resources.configuration)
+        config.setLocale(locale)
+
+        return context.createConfigurationContext(config)
+    }
+}
+
 class MainActivity : ComponentActivity() {
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val config = resources.configuration
-        config.setLocale(Locale.ENGLISH)
-        resources.updateConfiguration(
-            config,
-            resources.displayMetrics
-        )
-
-
         enableEdgeToEdge()
         setContent {
             TicTacToeTheme {
