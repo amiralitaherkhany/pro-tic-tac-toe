@@ -1,4 +1,4 @@
-# Tic Tac Toe - Android Game
+# Pro Tic Tac Toe
 
 A Pro **Tic Tac Toe** game developed with **Kotlin** and **Jetpack Compose** for Android.  
 Play against your friend in an intuitive and clean interface. Built as a fun project to explore modern Android development!
@@ -18,7 +18,3 @@ Play against your friend in an intuitive and clean interface. Built as a fun pro
 ## Built With
 - **Kotlin** - Modern programming language for Android development
 - **Jetpack Compose** - Declarative UI framework for building native Android apps
-### How to Run
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/YourUsername/tic-tac-toe-compose.git
