@@ -13,9 +13,9 @@ modern Android development!
 
 ## Screenshots
 
-| Main Screen                                 |&nbsp;&nbsp; VS AI &nbsp;&nbsp;&nbsp;&nbsp; | VS Friend (1)                            | VS Friend (2)                            | Game Over                               |
-|---------------------------------------------|--------------------------------------|------------------------------------------|------------------------------------------|-----------------------------------------|
-| ![Main Screen](screenshots/main_screen.jpg) | ![VS AI](screenshots/vs_ai.jpg)     | ![VS Friend (1)](screenshots/x_turn.jpg) | ![VS Friend (2)](screenshots/o_turn.jpg) | ![Game Over](screenshots/game_over.jpg) |
+| Main Screen                                 | VS AI                           | VS Friend (1)                            | VS Friend (2)                            | Game Over                               |
+|---------------------------------------------|---------------------------------|------------------------------------------|------------------------------------------|-----------------------------------------|
+| <img src="screenshots/main_screen.jpg" width="200"/> | <img src="screenshots/vs_ai.jpg" width="200"/> | <img src="screenshots/x_turn.jpg" width="200"/> | <img src="screenshots/o_turn.jpg" width="200"/> | <img src="screenshots/game_over.jpg" width="200"/> |
 
 ## Built With
 
