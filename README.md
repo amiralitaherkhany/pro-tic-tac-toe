@@ -13,7 +13,7 @@ modern Android development!
 
 ## Screenshots
 
-| Main Screen                                 | VS AI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | VS Friend (1)                            | VS Friend (2)                            | Game Over                               |
+| Main Screen                                 |&nbsp;&nbsp; VS AI &nbsp;&nbsp;&nbsp;&nbsp; | VS Friend (1)                            | VS Friend (2)                            | Game Over                               |
 |---------------------------------------------|--------------------------------------|------------------------------------------|------------------------------------------|-----------------------------------------|
 | ![Main Screen](screenshots/main_screen.jpg) | ![VS AI](screenshots/vs_ai.jpg)     | ![VS Friend (1)](screenshots/x_turn.jpg) | ![VS Friend (2)](screenshots/o_turn.jpg) | ![Game Over](screenshots/game_over.jpg) |
 
