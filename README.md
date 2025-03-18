@@ -22,20 +22,20 @@ modern Android development!
     <th style="width: 220px; text-align: center;">Game Over</th>
   </tr>
   <tr>
-    <td align="center">
-      <img src="screenshots/main_screen.jpg" width="200" alt="Main Screen"/>
+    <td >
+      <img src="screenshots/main_screen.jpg" width="576" alt="Main Screen"/>
     </td>
-    <td align="center">
-      <img src="screenshots/vs_ai.jpg" width="200" alt="VS AI"/>
+    <td >
+      <img src="screenshots/vs_ai.jpg" width="576" alt="VS AI"/>
     </td>
-    <td align="center">
-      <img src="screenshots/x_turn.jpg" width="200" alt="VS Friend (1)"/>
+    <td >
+      <img src="screenshots/x_turn.jpg" width="576" alt="VS Friend (1)"/>
     </td>
-    <td align="center">
-      <img src="screenshots/o_turn.jpg" width="200" alt="VS Friend (2)"/>
+    <td >
+      <img src="screenshots/o_turn.jpg" width="576" alt="VS Friend (2)"/>
     </td>
-    <td align="center">
-      <img src="screenshots/game_over.jpg" width="200" alt="Game Over"/>
+    <td >
+      <img src="screenshots/game_over.jpg" width="576" alt="Game Over"/>
     </td>
   </tr>
 </table>
