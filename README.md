@@ -13,9 +13,32 @@ modern Android development!
 
 ## Screenshots
 
-| Main Screen                                 | VS AI                           | VS Friend (1)                            | VS Friend (2)                            | Game Over                               |
-|---------------------------------------------|---------------------------------|------------------------------------------|------------------------------------------|-----------------------------------------|
-| <img src="screenshots/main_screen.jpg" width="200"/> | <img src="screenshots/vs_ai.jpg" width="200"/> | <img src="screenshots/x_turn.jpg" width="200"/> | <img src="screenshots/o_turn.jpg" width="200"/> | <img src="screenshots/game_over.jpg" width="200"/> |
+<table>
+  <tr>
+    <th style="width: 220px; text-align: center;">Main Screen</th>
+    <th style="width: 220px; text-align: center;">VS AI</th>
+    <th style="width: 220px; text-align: center;">VS Friend (1)</th>
+    <th style="width: 220px; text-align: center;">VS Friend (2)</th>
+    <th style="width: 220px; text-align: center;">Game Over</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/main_screen.jpg" width="200" alt="Main Screen"/>
+    </td>
+    <td align="center">
+      <img src="screenshots/vs_ai.jpg" width="200" alt="VS AI"/>
+    </td>
+    <td align="center">
+      <img src="screenshots/x_turn.jpg" width="200" alt="VS Friend (1)"/>
+    </td>
+    <td align="center">
+      <img src="screenshots/o_turn.jpg" width="200" alt="VS Friend (2)"/>
+    </td>
+    <td align="center">
+      <img src="screenshots/game_over.jpg" width="200" alt="Game Over"/>
+    </td>
+  </tr>
+</table>
 
 ## Built With
 
