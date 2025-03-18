@@ -16,7 +16,7 @@ modern Android development!
 <table>
   <tr>
     <th style="width: 220px; text-align: center;">Main Screen</th>
-    <th style="width: 220px; text-align: center;">VS AI</th>
+    <th style="width: 220px; text-align: center;">VS AI Mode</th>
     <th style="width: 220px; text-align: center;">VS Friend (1)</th>
     <th style="width: 220px; text-align: center;">VS Friend (2)</th>
     <th style="width: 220px; text-align: center;">Game Over</th>
