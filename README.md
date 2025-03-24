@@ -1,6 +1,6 @@
 # Pro Tic Tac Toe
 
-A Pro **Tic Tac Toe** game developed with **Kotlin** and **Jetpack Compose** for Android.  
+A **Tic Tac Toe** game developed with **Kotlin** and **Jetpack Compose** for Android.  
 Play against your friend in an intuitive and clean interface. Built as a fun project to explore
 modern Android development!
 
