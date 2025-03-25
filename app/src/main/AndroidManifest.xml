@@ -16,8 +16,6 @@
         <activity
             android:name="com.amirali_apps.tictactoe.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.TicTacToe">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
