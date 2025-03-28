@@ -3,7 +3,6 @@ package com.amirali_apps.tictactoe
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.core.net.toUri
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -34,7 +34,6 @@ import com.amirali_apps.tictactoe.ui.GameViewModel
 import com.amirali_apps.tictactoe.ui.theme.TicTacToeTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import java.util.Locale
 
 object LocaleHelper {
@@ -66,10 +65,11 @@ class MainActivity : ComponentActivity() {
                     withContext(Dispatchers.IO) {
                         try {
                             response = RetrofitClient.retrofitService.checkForUpdate()
-                            if (response?.latestVersion != BuildConfig.VERSION_NAME) {
+                            val latestVersion = response?.latestVersion ?: ""
+                            if (latestVersion.isNotEmpty() && latestVersion != BuildConfig.VERSION_NAME) {
                                 showDialog = true
                             }
-                        } catch (_: IOException) {
+                        } catch (_: Exception) {
                         }
                     }
                 }
@@ -79,11 +79,14 @@ class MainActivity : ComponentActivity() {
                     showDialog = showDialog,
                     onDismiss = { showDialog = false },
                     onDownloadClick = {
-                        val intent = Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(response?.downloadUrl)
-                        )
-                        context.startActivity(intent)
+                        val downloadUrl = response?.downloadUrl ?: ""
+                        if (downloadUrl.isNotEmpty()) {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                downloadUrl.toUri()
+                            )
+                            context.startActivity(intent)
+                        }
                         showDialog = false
                     }
                 )
