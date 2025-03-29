@@ -1,6 +1,5 @@
 package com.amirali_apps.tictactoe.ui.game
 
-import android.view.MotionEvent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -32,7 +31,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Replay
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -40,17 +38,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -63,6 +55,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.amirali_apps.tictactoe.R
 import com.amirali_apps.tictactoe.models.Move
+import com.amirali_apps.tictactoe.ui.components.MiniCustomButton
 import com.amirali_apps.tictactoe.ui.navigation.GameScreens
 import com.amirali_apps.tictactoe.ui.theme.accent1
 import com.amirali_apps.tictactoe.ui.theme.accent2
@@ -138,65 +131,6 @@ fun GameScreen(
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun MiniCustomButton(
-    onClick: () -> Unit,
-    icon: ImageVector,
-    modifier: Modifier = Modifier
-) {
-    var isPressed by remember { mutableStateOf(false) }
-    Box(
-        modifier = modifier
-            .size(38.dp)
-            .pointerInteropFilter { event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        isPressed = true
-                    }
-
-                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                        isPressed = false
-                        onClick()
-                    }
-                }
-                true
-            },
-    ) {
-        Surface(
-            modifier = Modifier
-                .size(36.dp)
-                .align(if (isPressed) Alignment.Center else Alignment.BottomStart)
-        ) { }
-        Box(
-            modifier = Modifier
-                .size(36.dp)
-                .align(if (isPressed) Alignment.Center else Alignment.TopEnd)
-                .background(MaterialTheme.colorScheme.secondary)
-                .border(
-                    border = BorderStroke(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                ),
-        ) {
-            Surface(
-                modifier = Modifier
-                    .size(32.dp)
-                    .align(Alignment.Center),
-                color = MaterialTheme.colorScheme.primary,
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = "Replay",
-                    tint = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.padding(4.dp)
-                )
             }
         }
     }
