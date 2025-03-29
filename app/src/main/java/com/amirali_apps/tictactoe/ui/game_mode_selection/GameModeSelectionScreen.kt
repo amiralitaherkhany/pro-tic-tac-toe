@@ -63,6 +63,8 @@ fun GameModeSelectionScreen(
     viewModel: GameModeSelectionViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val configuration = LocalConfiguration.current
+    val screenWidthDp = configuration.screenWidthDp
     Box {
         BackgroundImage(Modifier.fillMaxSize())
         Scaffold(containerColor = Color.Transparent) {
@@ -70,7 +72,8 @@ fun GameModeSelectionScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(it),
+                        .padding(it)
+                        .padding(horizontal = if (screenWidthDp > 500) (screenWidthDp * 0.25).dp else 0.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     GameTitle(modifier = Modifier.weight(0.50f))
