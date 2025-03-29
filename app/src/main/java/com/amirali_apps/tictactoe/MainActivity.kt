@@ -20,13 +20,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.amirali_apps.tictactoe.models.UpdateModel
 import com.amirali_apps.tictactoe.network.RetrofitClient
-import com.amirali_apps.tictactoe.network.UpdateModel
-import com.amirali_apps.tictactoe.ui.AiLevel
-import com.amirali_apps.tictactoe.ui.GameModeSelectionScreen
-import com.amirali_apps.tictactoe.ui.GameScreen
-import com.amirali_apps.tictactoe.ui.GameViewModel
-import com.amirali_apps.tictactoe.ui.UpdateDialog
+import com.amirali_apps.tictactoe.ui.components.UpdateDialog
+import com.amirali_apps.tictactoe.ui.game.AiLevel
+import com.amirali_apps.tictactoe.ui.game.GameScreen
+import com.amirali_apps.tictactoe.ui.game.GameViewModel
+import com.amirali_apps.tictactoe.ui.game_mode_selection.GameModeSelectionScreen
+import com.amirali_apps.tictactoe.ui.navigation.GameScreens
 import com.amirali_apps.tictactoe.ui.theme.TicTacToeTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -89,11 +90,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-enum class GameScreens {
-    GameModeSelection,
-    Game,
 }
 
 @Composable

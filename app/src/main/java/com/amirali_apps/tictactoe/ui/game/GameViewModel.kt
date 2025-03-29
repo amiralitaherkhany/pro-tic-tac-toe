@@ -1,10 +1,10 @@
-package com.amirali_apps.tictactoe.ui
+package com.amirali_apps.tictactoe.ui.game
 
 import androidx.lifecycle.ViewModel
-import com.amirali_apps.tictactoe.Move
 import com.amirali_apps.tictactoe.R
-import com.amirali_apps.tictactoe.TicTacToeAi
-import com.amirali_apps.tictactoe.TicTacToeProAi
+import com.amirali_apps.tictactoe.domain.ai.ProTicTacToeAi
+import com.amirali_apps.tictactoe.domain.ai.TicTacToeAi
+import com.amirali_apps.tictactoe.models.Move
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -91,7 +91,7 @@ class GameViewModel(
         if (!_isGameFinished.value) {
             delay(1000)
             val bestMoveAi = withContext(Dispatchers.Default) {
-                if (isPro) TicTacToeProAi(
+                if (isPro) ProTicTacToeAi(
                     numberOfMoves = _turnNumber,
                     moves = _xoQueue,
                     board = _xoList.value,

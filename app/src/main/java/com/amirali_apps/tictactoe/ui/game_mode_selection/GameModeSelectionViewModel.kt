@@ -1,4 +1,4 @@
-package com.amirali_apps.tictactoe.ui
+package com.amirali_apps.tictactoe.ui.game_mode_selection
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

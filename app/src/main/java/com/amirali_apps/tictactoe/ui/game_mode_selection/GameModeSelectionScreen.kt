@@ -1,4 +1,4 @@
-package com.amirali_apps.tictactoe.ui
+package com.amirali_apps.tictactoe.ui.game_mode_selection
 
 import android.view.MotionEvent
 import androidx.compose.animation.AnimatedContent
@@ -53,8 +53,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.amirali_apps.tictactoe.GameScreens
 import com.amirali_apps.tictactoe.R
+import com.amirali_apps.tictactoe.ui.game.AiLevel
+import com.amirali_apps.tictactoe.ui.navigation.GameScreens
 
 @Composable
 fun GameModeSelectionScreen(

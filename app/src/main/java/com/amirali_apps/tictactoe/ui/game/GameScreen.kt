@@ -1,4 +1,4 @@
-package com.amirali_apps.tictactoe.ui
+package com.amirali_apps.tictactoe.ui.game
 
 import android.view.MotionEvent
 import androidx.compose.animation.AnimatedVisibility
@@ -61,9 +61,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.amirali_apps.tictactoe.GameScreens
-import com.amirali_apps.tictactoe.Move
 import com.amirali_apps.tictactoe.R
+import com.amirali_apps.tictactoe.models.Move
+import com.amirali_apps.tictactoe.ui.navigation.GameScreens
 import com.amirali_apps.tictactoe.ui.theme.accent1
 import com.amirali_apps.tictactoe.ui.theme.accent2
 import com.amirali_apps.tictactoe.ui.theme.accent3

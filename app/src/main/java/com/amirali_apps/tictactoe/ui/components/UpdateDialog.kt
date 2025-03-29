@@ -1,4 +1,4 @@
-package com.amirali_apps.tictactoe.ui
+package com.amirali_apps.tictactoe.ui.components
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
