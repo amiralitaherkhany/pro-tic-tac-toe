@@ -1,4 +1,4 @@
-package com.amirali_apps.tictactoe.network
+package com.amirali_apps.tictactoe.models
 
 import com.google.gson.annotations.SerializedName
 
