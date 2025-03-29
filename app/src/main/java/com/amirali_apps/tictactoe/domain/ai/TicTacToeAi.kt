@@ -1,4 +1,6 @@
-package com.amirali_apps.tictactoe
+package com.amirali_apps.tictactoe.domain.ai
+
+import com.amirali_apps.tictactoe.models.Move
 
 class TicTacToeAi(private val maxDepth: Int) {
     private fun minimax(
@@ -6,11 +8,11 @@ class TicTacToeAi(private val maxDepth: Int) {
         depth: Int,
         isAI: Boolean
     ): Int {
-        val score = evaluate(board)
+        val score = AiUtils.evaluate(board)
         if (depth >= maxDepth) return score
         if (score == 10) return score - depth
         if (score == -10) return score + depth
-        if (isMovesLeft(board).not()) return 0
+        if (AiUtils.isMovesLeft(board).not()) return 0
 
 
         if (isAI) {
@@ -88,47 +90,5 @@ class TicTacToeAi(private val maxDepth: Int) {
             }
         }
         return bestMove
-    }
-
-    private fun evaluate(board: List<MutableList<Char>>): Int {
-        for (row in 0..2) {
-            if (board[row][0] == board[row][1] &&
-                board[row][1] == board[row][2]
-            ) {
-                if (board[row][0] == 'X') return 10
-                if (board[row][0] == 'O') return -10
-            }
-        }
-        for (col in 0..2) {
-            if (board[0][col] == board[1][col] &&
-                board[1][col] == board[2][col]
-            ) {
-                if (board[0][col] == 'X') return 10
-                if (board[0][col] == 'O') return -10
-            }
-        }
-        if (board[0][0] == board[1][1] &&
-            board[1][1] == board[2][2]
-        ) {
-            if (board[0][0] == 'X') return 10
-            if (board[0][0] == 'O') return -10
-        }
-        if (board[0][2] == board[1][1] &&
-            board[1][1] == board[2][0]
-        ) {
-            if (board[0][2] == 'X') return 10
-            if (board[0][2] == 'O') return -10
-        }
-
-        return 0
-    }
-
-    private fun isMovesLeft(board: List<MutableList<Char>>): Boolean {
-        for (row in board) {
-            for (cell in row) {
-                if (cell == '_') return true
-            }
-        }
-        return false
     }
 }
