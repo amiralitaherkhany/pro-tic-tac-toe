@@ -1,5 +1,6 @@
 package com.amirali_apps.tictactoe.ui.game_mode_selection
 
+import android.content.res.Configuration
 import android.view.MotionEvent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
@@ -65,18 +66,54 @@ fun GameModeSelectionScreen(
     val uiState by viewModel.uiState.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp
+    val screenHeightDp = configuration.screenHeightDp
+    val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     Box {
         BackgroundImage(Modifier.fillMaxSize())
         Scaffold(containerColor = Color.Transparent) {
-            Box {
+            if (isPortrait) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(it)
-                        .padding(horizontal = if (screenWidthDp > 500) (screenWidthDp * 0.25).dp else 0.dp),
+                        .padding(horizontal = if (screenWidthDp > 500) (screenWidthDp * 0.15).dp else 0.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     GameTitle(modifier = Modifier.weight(0.50f))
+
+                    AnimatedContent(
+                        targetState = uiState,
+                        modifier = Modifier.weight(0.50f)
+                    ) { it ->
+                        when (it) {
+                            is UiState.SelectMode -> FirstContent(onSubmit = { isAi ->
+                                viewModel.onSelectModeSubmitted(isAi)
+                            })
+
+                            is UiState.Settings -> SecondContent(
+                                isAi = it.isAi,
+                                onSubmit = { isPro, selectedAiLevel ->
+                                    navController.navigate("${GameScreens.Game.name}/$isPro/${it.isAi}/$selectedAiLevel")
+                                },
+                                onBackPressed = {
+                                    viewModel.onBackPressed()
+                                },
+                            )
+                        }
+                    }
+                }
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                        .padding(vertical = if (screenHeightDp > 500) (screenHeightDp * 0.15).dp else 0.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    GameTitle(
+                        modifier = Modifier
+                            .weight(0.50f)
+                    )
 
                     AnimatedContent(
                         targetState = uiState,
@@ -312,8 +349,8 @@ fun SecondContent(
                             },
                             label = {
                                 Text(
-                                    text = AiLevel.entries[index].name,
-                                    fontSize = (screenWidthDp * 0.026).sp
+                                    text = aiLevel.name,
+                                    fontSize = if (screenWidthDp < 500) (screenWidthDp * 0.026).sp else 15.sp,
                                 )
                             },
                             leadingIcon = {
@@ -363,54 +400,55 @@ private fun BackgroundImage(modifier: Modifier = Modifier) {
         modifier = modifier,
         painter = painterResource(R.drawable.xo_background),
         contentDescription = "background_image",
-        contentScale = ContentScale.FillBounds
+        contentScale = ContentScale.Crop
     )
 }
 
 @Composable
 private fun GameTitle(modifier: Modifier = Modifier) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = modifier
-    ) {
-        Spacer(Modifier.weight(0.10f))
-        Text(
-            "Tic",
-            style = MaterialTheme.typography.titleLarge.plus(
-                TextStyle(
-                    color = Color.Black,
-                    fontSize = 66.sp,
-                )
-            ),
-            modifier = Modifier
-                .weight(0.25f)
-                .wrapContentSize(Alignment.BottomCenter)
-        )
-        Text(
-            "Tac",
-            style = MaterialTheme.typography.titleLarge.plus(
-                TextStyle(
-                    color = Color.Black,
-                    fontSize = 86.sp,
-                )
-            ),
-            modifier = Modifier
-                .weight(0.25f)
-                .wrapContentSize(Alignment.BottomCenter)
-        )
-        Text(
-            "Toe",
-            style = MaterialTheme.typography.titleLarge.plus(
-                TextStyle(
-                    color = Color.Black,
-                    fontSize = 96.sp,
-                )
-            ),
-            modifier = Modifier
-                .weight(0.25f)
-                .wrapContentSize(Alignment.BottomCenter)
-        )
+    Box(modifier = modifier) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            Text(
+                "Tic",
+                style = MaterialTheme.typography.titleLarge.plus(
+                    TextStyle(
+                        color = Color.Black,
+                        fontSize = 66.sp,
+                    )
+                ),
+                modifier = Modifier
+                    .weight(0.25f)
+                    .wrapContentSize(Alignment.Center)
+            )
+            Text(
+                "Tac",
+                style = MaterialTheme.typography.titleLarge.plus(
+                    TextStyle(
+                        color = Color.Black,
+                        fontSize = 86.sp,
+                    )
+                ),
+                modifier = Modifier
+                    .weight(0.25f)
+                    .wrapContentSize(Alignment.Center)
+            )
+            Text(
+                "Toe",
+                style = MaterialTheme.typography.titleLarge.plus(
+                    TextStyle(
+                        color = Color.Black,
+                        fontSize = 96.sp,
+                    )
+                ),
+                modifier = Modifier
+                    .weight(0.25f)
+                    .wrapContentSize(Alignment.Center)
+            )
+        }
     }
 }
 
