@@ -31,6 +31,7 @@ import com.amirali_apps.tictactoe.ui.game_mode_selection.GameModeSelectionScreen
 import com.amirali_apps.tictactoe.ui.navigation.GameScreens
 import com.amirali_apps.tictactoe.ui.theme.TicTacToeTheme
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
@@ -52,9 +53,16 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
+        var keepOnScreenCondition = mutableStateOf(true)
+        installSplashScreen().setKeepOnScreenCondition {
+            keepOnScreenCondition.value
+        }
         enableEdgeToEdge()
         setContent {
+            LaunchedEffect(null) {
+                delay(1000L)
+                keepOnScreenCondition.value = false
+            }
             TicTacToeTheme {
                 MyApp()
                 var showDialog by remember { mutableStateOf(false) }
