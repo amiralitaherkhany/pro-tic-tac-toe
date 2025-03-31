@@ -16,7 +16,7 @@
         <activity
             android:name="com.amirali_apps.tictactoe.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.TicTacToe">
+            android:theme="@style/Theme.TicTacToe.MySplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
