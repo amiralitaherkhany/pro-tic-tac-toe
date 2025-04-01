@@ -144,73 +144,109 @@ fun MainLayout(
     navController: NavController,
 ) {
     val isTurnX by viewModel.isTurnX.collectAsState()
-    Box(
+
+    Column(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Board(
-            modifier = Modifier.align(Alignment.Center),
-            viewModel = viewModel,
-        )
-
-
-
-
-        AnimatedVisibility(
-            visible = isTurnX.not() or viewModel.isAi,
+        Box(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
+                .weight(0.15f)
+                .fillMaxSize()
         ) {
             Column(
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = modifier
-                    .fillMaxHeight(0.15f)
+                modifier = Modifier
+                    .align(alignment = Alignment.TopStart)
+                    .padding(
+                        top = 20.dp,
+                        start = 24.dp
+                    )
             ) {
-                Text(
-                    if (isTurnX) (if (viewModel.isAi) "X" else "O") else "O",
-                    style = MaterialTheme.typography.headlineMedium.plus(
-                        TextStyle(
-                            fontSize = 50.sp
-                        )
-                    ),
-                    color = MaterialTheme.colorScheme.primary,
+                MiniCustomButton(
+                    icon = Icons.Filled.Close,
+                    onClick = {
+                        navController.navigate(GameScreens.GameModeSelection.name) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    },
                 )
-                Text(
-                    if (viewModel.isAi.not()) "Your Move" else (if (isTurnX) stringResource(R.string.ai_s_move) else stringResource(R.string.your_move)),
-                    style = MaterialTheme.typography.bodyLarge.plus(
-                        TextStyle(
-                            fontSize = 20.sp,
-                        )
-                    ),
-                    color = MaterialTheme.colorScheme.primary,
+                Spacer(Modifier.height(15.dp))
+                MiniCustomButton(
+                    icon = Icons.Filled.Replay,
+                    onClick = {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            if (viewModel.isAi.not() or (viewModel.isAi and isTurnX.not())) viewModel.resetGame()
+                        }
+                    },
                 )
+            }
+
+
+
+
+            if (viewModel.isAi.not()) {
+                Column(
+                    modifier = Modifier.align(alignment = Alignment.Center),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    AnimatedVisibility(
+                        visible = isTurnX,
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxHeight()
+                        ) {
+                            Text(
+                                stringResource(R.string.your_move),
+                                style = MaterialTheme.typography.bodyLarge.plus(
+                                    TextStyle(
+                                        fontSize = 20.sp,
+                                    )
+                                ),
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.rotate(180f)
+                            )
+
+                            Text(
+                                if (isTurnX) "X" else (if (viewModel.isAi) "O" else "X"),
+                                style = MaterialTheme.typography.headlineMedium.plus(
+                                    TextStyle(
+                                        fontSize = 50.sp
+                                    )
+                                ),
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
+                }
             }
         }
 
-        if (viewModel.isAi.not()) {
+        Board(
+            viewModel = viewModel,
+        )
+        Column(
+            modifier = Modifier
+                .weight(0.15f)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             AnimatedVisibility(
-                visible = isTurnX,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
+                visible = isTurnX.not() or viewModel.isAi,
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier
-                        .fillMaxHeight(0.15f)
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        stringResource(R.string.your_move),
-                        style = MaterialTheme.typography.bodyLarge.plus(
-                            TextStyle(
-                                fontSize = 20.sp,
-                            )
-                        ),
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.rotate(180f)
-                    )
-
-                    Text(
-                        if (isTurnX) "X" else (if (viewModel.isAi) "O" else "X"),
+                        if (isTurnX) (if (viewModel.isAi) "X" else "O") else "O",
                         style = MaterialTheme.typography.headlineMedium.plus(
                             TextStyle(
                                 fontSize = 50.sp
@@ -218,37 +254,17 @@ fun MainLayout(
                         ),
                         color = MaterialTheme.colorScheme.primary,
                     )
+                    Text(
+                        if (viewModel.isAi.not()) "Your Move" else (if (isTurnX) stringResource(R.string.ai_s_move) else stringResource(R.string.your_move)),
+                        style = MaterialTheme.typography.bodyLarge.plus(
+                            TextStyle(
+                                fontSize = 20.sp,
+                            )
+                        ),
+                        color = MaterialTheme.colorScheme.primary,
+                    )
                 }
             }
-        }
-
-        Column(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(
-                    start = 24.dp,
-                    top = 20.dp
-                ),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            MiniCustomButton(
-                icon = Icons.Filled.Close,
-                onClick = {
-                    navController.navigate(GameScreens.GameModeSelection.name) {
-                        popUpTo(0) { inclusive = true }
-                    }
-                },
-            )
-            Spacer(Modifier.height(15.dp))
-            MiniCustomButton(
-                icon = Icons.Filled.Replay,
-                onClick = {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        if (viewModel.isAi.not() or (viewModel.isAi and isTurnX.not())) viewModel.resetGame()
-                    }
-                },
-            )
         }
     }
 }
@@ -289,7 +305,7 @@ fun XoElement(
 
 @Composable
 fun Board(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     viewModel: GameViewModel,
 ) {
     val isTurnX by viewModel.isTurnX.collectAsState()
@@ -339,8 +355,6 @@ fun Board(
                 )
             }
         }
-
-
         if (viewModel.isAi.not()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
