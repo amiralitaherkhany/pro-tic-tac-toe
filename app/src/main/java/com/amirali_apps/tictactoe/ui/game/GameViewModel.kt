@@ -1,15 +1,18 @@
 package com.amirali_apps.tictactoe.ui.game
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.amirali_apps.tictactoe.R
 import com.amirali_apps.tictactoe.domain.ai.ProTicTacToeAi
 import com.amirali_apps.tictactoe.domain.ai.TicTacToeAi
 import com.amirali_apps.tictactoe.models.Move
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 enum class AiLevel(val depth: Int) {
     EASY(2),
@@ -17,11 +20,15 @@ enum class AiLevel(val depth: Int) {
     HARD(8),
 }
 
-class GameViewModel(
-    val isPro: Boolean,
-    val isAi: Boolean,
-    val aiLevel: AiLevel?,
+@HiltViewModel
+class GameViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    val isPro = savedStateHandle.get<Boolean>("isPro")!!
+    val isAi = savedStateHandle.get<Boolean>("isAi")!!
+    private val aiLevel: AiLevel? =
+        if (savedStateHandle.get<Boolean>("isAi")!!) AiLevel.entries[savedStateHandle.get<Int>("level")!!] else null
+
     ///
     private var _turnNumber = 0
     private var _xoQueue: ArrayDeque<Move> = ArrayDeque()

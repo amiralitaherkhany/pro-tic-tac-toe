@@ -24,12 +24,11 @@ import androidx.navigation.navArgument
 import com.amirali_apps.tictactoe.models.UpdateModel
 import com.amirali_apps.tictactoe.network.RetrofitClient
 import com.amirali_apps.tictactoe.ui.components.UpdateDialog
-import com.amirali_apps.tictactoe.ui.game.AiLevel
 import com.amirali_apps.tictactoe.ui.game.GameScreen
-import com.amirali_apps.tictactoe.ui.game.GameViewModel
 import com.amirali_apps.tictactoe.ui.game_mode_selection.GameModeSelectionScreen
 import com.amirali_apps.tictactoe.ui.navigation.GameScreens
 import com.amirali_apps.tictactoe.ui.theme.TicTacToeTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -46,6 +45,7 @@ object LocaleHelper {
     }
 }
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                 keepOnScreenCondition.value = false
             }
             TicTacToeTheme {
-                MyApp()
+                AppNavHost()
                 var showDialog by remember { mutableStateOf(false) }
                 var response by remember { mutableStateOf<UpdateModel?>(null) }
                 val context = LocalContext.current
@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyApp() {
+fun AppNavHost() {
     val navController = rememberNavController()
     NavHost(
         navController,
@@ -119,11 +119,6 @@ fun MyApp() {
             )
         ) { backStackEntry ->
             GameScreen(
-                gameViewModel = GameViewModel(
-                    isPro = backStackEntry.arguments?.getBoolean("isPro")!!,
-                    isAi = backStackEntry.arguments?.getBoolean("isAi")!!,
-                    aiLevel = if (backStackEntry.arguments?.getBoolean("isAi")!!) AiLevel.entries[backStackEntry.arguments?.getInt("level")!!] else null
-                ),
                 navController = navController,
             )
         }

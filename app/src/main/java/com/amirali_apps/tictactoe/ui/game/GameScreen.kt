@@ -52,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.amirali_apps.tictactoe.R
 import com.amirali_apps.tictactoe.models.Move
@@ -66,7 +67,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun GameScreen(
-    gameViewModel: GameViewModel,
+    gameViewModel: GameViewModel = hiltViewModel(),
     navController: NavController,
 ) {
     val isGameFinished by gameViewModel.isGameFinished.collectAsState()
