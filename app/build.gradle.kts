@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.amirali_apps.tictactoe"
-        minSdk = 24
+        minSdk = 31
         targetSdk = 36
         versionCode = 5
         versionName = "1.1.0"
