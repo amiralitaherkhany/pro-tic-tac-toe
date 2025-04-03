@@ -148,89 +148,80 @@ fun MainLayout(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(vertical = 10.dp)
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .align(alignment = Alignment.TopCenter)
+                .padding(top = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(0.10f)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+            AnimatedVisibility(
+                visible = if (viewModel.isAi.not()) isTurnX else false,
             ) {
-                AnimatedVisibility(
-                    visible = if (viewModel.isAi.not()) isTurnX else false,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxHeight()
-                    ) {
-                        Text(
-                            stringResource(R.string.your_move),
-                            style = MaterialTheme.typography.bodyLarge.plus(
-                                TextStyle(
-                                    fontSize = 20.sp,
-                                )
-                            ),
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.rotate(180f)
-                        )
+                    Text(
+                        stringResource(R.string.your_move),
+                        style = MaterialTheme.typography.bodyLarge.plus(
+                            TextStyle(
+                                fontSize = 20.sp,
+                            )
+                        ),
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.rotate(180f)
+                    )
 
-                        Text(
-                            if (isTurnX) "X" else (if (viewModel.isAi) "O" else "X"),
-                            style = MaterialTheme.typography.headlineMedium.plus(
-                                TextStyle(
-                                    fontSize = 50.sp
-                                )
-                            ),
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    }
+                    Text(
+                        if (isTurnX) "X" else (if (viewModel.isAi) "O" else "X"),
+                        style = MaterialTheme.typography.headlineMedium.plus(
+                            TextStyle(
+                                fontSize = 50.sp
+                            )
+                        ),
+                        color = MaterialTheme.colorScheme.primary,
+                    )
                 }
             }
-            Board(
-                viewModel = viewModel,
-                modifier = Modifier.weight(0.80f)
-            )
-            Column(
-                modifier = Modifier
-                    .weight(0.10f)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+        }
+        Board(
+            viewModel = viewModel,
+            modifier = Modifier.align(Alignment.Center)
+        )
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            AnimatedVisibility(
+                visible = isTurnX.not() or viewModel.isAi,
             ) {
-                AnimatedVisibility(
-                    visible = isTurnX.not() or viewModel.isAi,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            if (isTurnX) (if (viewModel.isAi) "X" else "O") else "O",
-                            style = MaterialTheme.typography.headlineMedium.plus(
-                                TextStyle(
-                                    fontSize = 50.sp
-                                )
-                            ),
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                        Text(
-                            if (viewModel.isAi.not()) "Your Move" else (if (isTurnX) stringResource(R.string.ai_s_move) else stringResource(R.string.your_move)),
-                            style = MaterialTheme.typography.bodyLarge.plus(
-                                TextStyle(
-                                    fontSize = 20.sp,
-                                )
-                            ),
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    }
+                    Text(
+                        if (isTurnX) (if (viewModel.isAi) "X" else "O") else "O",
+                        style = MaterialTheme.typography.headlineMedium.plus(
+                            TextStyle(
+                                fontSize = 50.sp
+                            )
+                        ),
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        if (viewModel.isAi.not()) "Your Move" else (if (isTurnX) stringResource(R.string.ai_s_move) else stringResource(R.string.your_move)),
+                        style = MaterialTheme.typography.bodyLarge.plus(
+                            TextStyle(
+                                fontSize = 20.sp,
+                            )
+                        ),
+                        color = MaterialTheme.colorScheme.primary,
+                    )
                 }
             }
         }
@@ -240,7 +231,8 @@ fun MainLayout(
             modifier = Modifier
                 .align(alignment = Alignment.TopStart)
                 .padding(
-                    start = 20.dp
+                    start = 20.dp,
+                    top = 20.dp
                 )
         ) {
             MiniCustomButton(
@@ -281,14 +273,14 @@ fun XoElement(
         label = "",
     )
     val currentAlpha = if (isBlinking) alpha else 1f
-
+    val density = LocalConfiguration.current.densityDpi
 
 
     Text(
         if (isX) "X" else "O",
         style = MaterialTheme.typography.headlineLarge.plus(
             TextStyle(
-                fontSize = 60.sp,
+                fontSize = (density * 0.17).sp,
             )
         ),
         color = if (isX) (if (isAi) accent2 else MaterialTheme.colorScheme.primary) else (if (isAi) accent3 else accent1),
@@ -425,7 +417,7 @@ fun Board(
 
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.75f)
+                .width((screenWidthDp * 0.75).dp)
                 .aspectRatio(1f)
         ) {
             Surface(
