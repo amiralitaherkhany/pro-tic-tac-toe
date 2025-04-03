@@ -41,7 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInteropFilter
@@ -243,8 +242,7 @@ fun SecondContent(
                             100.dp,
                             50.dp
                         )
-                        .weight(1f)
-                        .scale(1.1f),
+                        .weight(1f),
                     selected = isPro.not(),
                     onClick = {
                         isPro = false
@@ -280,8 +278,7 @@ fun SecondContent(
                             100.dp,
                             50.dp
                         )
-                        .weight(1f)
-                        .scale(1.1f),
+                        .weight(1f),
                     border = BorderStroke(
                         width = 2.dp,
                         color = MaterialTheme.colorScheme.primary,
@@ -332,7 +329,7 @@ fun SecondContent(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
+                        .padding(horizontal = 15.dp)
                         .weight(0.40f)
                 ) {
                     val configuration = LocalConfiguration.current
@@ -350,7 +347,7 @@ fun SecondContent(
                             label = {
                                 Text(
                                     text = aiLevel.name,
-                                    fontSize = if (screenWidthDp < 500) (screenWidthDp * 0.026).sp else 15.sp,
+                                    fontSize = if (screenWidthDp < 500) (screenWidthDp * 0.026).sp else 10.sp,
                                 )
                             },
                             leadingIcon = {
