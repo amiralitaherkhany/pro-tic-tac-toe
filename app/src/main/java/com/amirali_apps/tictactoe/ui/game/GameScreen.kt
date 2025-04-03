@@ -230,6 +230,7 @@ fun MainLayout(
 
         Board(
             viewModel = viewModel,
+            modifier = Modifier.weight(0.70f)
         )
         Column(
             modifier = Modifier
@@ -316,154 +317,122 @@ fun Board(
     val oWins by viewModel.oWins.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp
-    Box(
+    Column(
         modifier = modifier
-            .fillMaxHeight(0.65f),
+            .fillMaxHeight(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if (viewModel.isAi.not()) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .alpha(if (isTurnX) 0.25f else 1f),
-            ) {
-                Text(
-                    stringResource(
-                        R.string.player_o,
-                        oWins
-                    ),
-                    style = MaterialTheme.typography.bodyMedium.plus(
-                        TextStyle(
-                            fontWeight = FontWeight.Normal,
-                            fontSize = (screenWidthDp * 0.042).sp,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    ),
-                )
-                Image(
-                    painter = painterResource(R.drawable.self_image),
-                    contentDescription = "Self Image",
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(0.75f)
+        ) {
+            if (viewModel.isAi) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .size(
-                            (screenWidthDp * 0.26).dp,
-                            (screenWidthDp * 0.26).dp
-                        )
-                        .graphicsLayer(
-                            scaleX = -1f
+                        .alpha(if (isTurnX) 0.25f else 1f)
+                ) {
+                    Text(
+                        stringResource(
+                            R.string.you_o,
+                            oWins
                         ),
-                    contentScale = ContentScale.Crop,
-                )
+                        style = MaterialTheme.typography.bodyMedium.plus(
+                            TextStyle(
+                                fontWeight = FontWeight.Normal,
+                                fontSize = (screenWidthDp * 0.042).sp,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        ),
+                    )
+                    Image(
+                        painter = painterResource(R.drawable.self_ai_image),
+                        contentDescription = "Self Image",
+                        modifier = Modifier
+                            .size(
+                                (screenWidthDp * 0.26).dp,
+                                (screenWidthDp * 0.26).dp
+                            ),
+                        contentScale = ContentScale.Crop,
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            if (viewModel.isAi.not()) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .alpha(if (isTurnX) 0.25f else 1f),
+                ) {
+                    Text(
+                        stringResource(
+                            R.string.player_o,
+                            oWins
+                        ),
+                        style = MaterialTheme.typography.bodyMedium.plus(
+                            TextStyle(
+                                fontWeight = FontWeight.Normal,
+                                fontSize = (screenWidthDp * 0.042).sp,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        ),
+                    )
+                    Image(
+                        painter = painterResource(R.drawable.self_image),
+                        contentDescription = "Self Image",
+                        modifier = Modifier
+                            .size(
+                                (screenWidthDp * 0.26).dp,
+                                (screenWidthDp * 0.26).dp
+                            )
+                            .graphicsLayer(
+                                scaleX = -1f
+                            ),
+                        contentScale = ContentScale.Crop,
+                    )
+                }
+            }
+            if (viewModel.isAi) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .alpha(if (isTurnX.not()) 0.25f else 1f)
+                ) {
+                    Text(
+                        stringResource(
+                            R.string.game_ai,
+                            xWins
+                        ),
+                        style = MaterialTheme.typography.bodyMedium.plus(
+                            TextStyle(
+                                fontWeight = FontWeight.Normal,
+                                fontSize = (screenWidthDp * 0.042).sp,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        ),
+                    )
+                    Image(
+                        painter = painterResource(R.drawable.ai_image),
+                        contentDescription = "Ai Image",
+                        modifier = Modifier
+                            .size(
+                                (screenWidthDp * 0.26).dp,
+                                (screenWidthDp * 0.26).dp
+                            )
+                            .graphicsLayer(
+                                scaleX = -1f
+                            ),
+                        contentScale = ContentScale.Crop,
+                    )
+                }
             }
         }
-        if (viewModel.isAi.not()) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .alpha(if (isTurnX.not()) 0.25f else 1f)
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.opponent_image),
-                    contentDescription = "Opponent Image",
-                    modifier = Modifier
-                        .size(
-                            (screenWidthDp * 0.26).dp,
-                            (screenWidthDp * 0.26).dp
-                        )
-                        .graphicsLayer(
-                            rotationZ = 180f,
-                            scaleX = -1f,
-                        ),
-                    contentScale = ContentScale.Crop,
-                )
-                Text(
-                    stringResource(
-                        R.string.player_x,
-                        xWins
-                    ),
-                    modifier = Modifier.rotate(180f),
-                    style = MaterialTheme.typography.bodyMedium.plus(
-                        TextStyle(
-                            fontWeight = FontWeight.Normal,
-                            fontSize = (screenWidthDp * 0.042).sp,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    ),
-                )
-            }
-        }
-        if (viewModel.isAi) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .alpha(if (isTurnX) 0.25f else 1f)
-            ) {
-                Text(
-                    stringResource(
-                        R.string.you_o,
-                        oWins
-                    ),
-                    style = MaterialTheme.typography.bodyMedium.plus(
-                        TextStyle(
-                            fontWeight = FontWeight.Normal,
-                            fontSize = (screenWidthDp * 0.042).sp,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    ),
-                )
-                Image(
-                    painter = painterResource(R.drawable.self_ai_image),
-                    contentDescription = "Self Image",
-                    modifier = Modifier
-                        .size(
-                            (screenWidthDp * 0.26).dp,
-                            (screenWidthDp * 0.26).dp
-                        ),
-                    contentScale = ContentScale.Crop,
-                )
-            }
-        }
-        if (viewModel.isAi) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .alpha(if (isTurnX.not()) 0.25f else 1f)
-            ) {
-                Text(
-                    stringResource(
-                        R.string.game_ai,
-                        xWins
-                    ),
-                    style = MaterialTheme.typography.bodyMedium.plus(
-                        TextStyle(
-                            fontWeight = FontWeight.Normal,
-                            fontSize = (screenWidthDp * 0.042).sp,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    ),
-                )
-                Image(
-                    painter = painterResource(R.drawable.ai_image),
-                    contentDescription = "Ai Image",
-                    modifier = Modifier
-                        .size(
-                            (screenWidthDp * 0.26).dp,
-                            (screenWidthDp * 0.26).dp
-                        )
-                        .graphicsLayer(
-                            scaleX = -1f
-                        ),
-                    contentScale = ContentScale.Crop,
-                )
-            }
-        }
+
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.75f)
                 .aspectRatio(1f)
-                .align(Alignment.Center)
         ) {
             Surface(
                 color = MaterialTheme.colorScheme.primary,
@@ -538,6 +507,48 @@ fun Board(
                     }
                 }
             }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(0.75f)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .alpha(if (viewModel.isAi.not()) (if (isTurnX.not()) 0.25f else 1f) else 0f)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.opponent_image),
+                    contentDescription = "Opponent Image",
+                    modifier = Modifier
+                        .size(
+                            (screenWidthDp * 0.26).dp,
+                            (screenWidthDp * 0.26).dp
+                        )
+                        .graphicsLayer(
+                            rotationZ = 180f,
+                            scaleX = -1f,
+                        ),
+                    contentScale = ContentScale.Crop,
+                )
+                Text(
+                    stringResource(
+                        R.string.player_x,
+                        xWins
+                    ),
+                    modifier = Modifier.rotate(180f),
+                    style = MaterialTheme.typography.bodyMedium.plus(
+                        TextStyle(
+                            fontWeight = FontWeight.Normal,
+                            fontSize = (screenWidthDp * 0.042).sp,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    ),
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
