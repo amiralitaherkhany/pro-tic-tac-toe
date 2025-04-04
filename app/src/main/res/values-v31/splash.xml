@@ -6,5 +6,6 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/avd_splash</item>
         <item name="windowSplashScreenAnimationDuration">1000</item>
         <item name="postSplashScreenTheme">@style/Theme.TicTacToe</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/my_name_splash</item>
     </style>
 </resources>

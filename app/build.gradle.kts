@@ -8,11 +8,11 @@ plugins {
 
 android {
     namespace = "com.amirali_apps.tictactoe"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.amirali_apps.tictactoe"
-        minSdk = 31
+        minSdk = 24
         targetSdk = 36
         versionCode = 5
         versionName = "1.1.0"

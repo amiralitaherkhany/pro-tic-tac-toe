@@ -17,14 +17,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
@@ -273,21 +271,24 @@ fun XoElement(
         label = "",
     )
     val currentAlpha = if (isBlinking) alpha else 1f
-    val density = LocalConfiguration.current.densityDpi
 
 
-    Text(
-        if (isX) "X" else "O",
-        style = MaterialTheme.typography.headlineLarge.plus(
-            TextStyle(
-                fontSize = (density * 0.17).sp,
-            )
-        ),
-        color = if (isX) (if (isAi) accent2 else MaterialTheme.colorScheme.primary) else (if (isAi) accent3 else accent1),
+    Box(
         modifier = Modifier
-            .graphicsLayer(alpha = currentAlpha)
-            .wrapContentSize()
-    )
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            if (isX) "X" else "O",
+            style = MaterialTheme.typography.headlineLarge,
+            fontSize = 70.sp,
+            textAlign = TextAlign.Center,
+            color = if (isX) (if (isAi) accent2 else MaterialTheme.colorScheme.primary) else (if (isAi) accent3 else accent1),
+            modifier = Modifier
+                .graphicsLayer(alpha = currentAlpha)
+                .padding(start = 3.dp)
+        )
+    }
 }
 
 @Composable
@@ -304,8 +305,7 @@ fun Board(
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp
     Column(
-        modifier = modifier
-            .fillMaxHeight(),
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
