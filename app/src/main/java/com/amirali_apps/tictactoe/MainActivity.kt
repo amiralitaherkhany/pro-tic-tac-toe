@@ -116,7 +116,7 @@ fun AppNavHost() {
                 navArgument("isPro") { type = NavType.BoolType },
                 navArgument("isAi") { type = NavType.BoolType },
                 navArgument("level") { type = NavType.IntType },
-            )
+                )
         ) { backStackEntry ->
             GameScreen(
                 navController = navController,
