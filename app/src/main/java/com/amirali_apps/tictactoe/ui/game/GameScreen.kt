@@ -52,6 +52,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -173,7 +174,10 @@ fun LandScapeMainLayout(
 ) {
     val configuration = LocalConfiguration.current
     val screenHeightDp = configuration.screenHeightDp
-    val padding = (45000 / screenHeightDp).dp.coerceAtLeast(0.dp)
+    val padding = (45000 / screenHeightDp).dp.coerceIn(
+        0.dp,
+        100.dp
+    )
 
     Row(
         modifier = Modifier
@@ -423,7 +427,7 @@ fun XoElement(
             color = if (isX) (if (isAi) accent2 else MaterialTheme.colorScheme.primary) else (if (isAi) accent3 else accent1),
             modifier = Modifier
                 .graphicsLayer(alpha = currentAlpha)
-                .padding(start = 3.dp)
+                .padding(start = 1.dp)
         )
     }
 }
