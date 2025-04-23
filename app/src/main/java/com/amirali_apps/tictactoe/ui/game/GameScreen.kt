@@ -33,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Replay
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -52,7 +53,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.coerceIn
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -150,8 +150,14 @@ fun GameOverComposable(
                             gameViewModel.resetGame()
                         }
                     },
-                    icon = Icons.Filled.Replay,
-                )
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Replay,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.padding(4.dp)
+                    )
+                }
                 Spacer(Modifier.width(24.dp))
                 MiniCustomButton(
                     onClick = {
@@ -159,8 +165,14 @@ fun GameOverComposable(
                             popUpTo(0) { inclusive = true }
                         }
                     },
-                    icon = Icons.Filled.Home,
-                )
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Home,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.padding(4.dp)
+                    )
+                }
             }
         }
     }
@@ -303,7 +315,7 @@ fun UserTurn(
                     color = MaterialTheme.colorScheme.primary,
                 )
                 Text(
-                    if (viewModel.isAi.not()) "Your Move" else (if (isTurnX) stringResource(R.string.ai_s_move) else stringResource(R.string.your_move)),
+                    if (viewModel.isAi.not()) stringResource(R.string.your_move) else (if (isTurnX) stringResource(R.string.ai_s_move) else stringResource(R.string.your_move)),
                     style = MaterialTheme.typography.bodyLarge.plus(
                         TextStyle(
                             fontSize = 20.sp,
@@ -330,22 +342,34 @@ fun CloseAndReplayButtons(
         modifier = modifier
     ) {
         MiniCustomButton(
-            icon = Icons.Filled.Close,
             onClick = {
                 navController.navigate(GameScreens.GameModeSelection.name) {
                     popUpTo(0) { inclusive = true }
                 }
             },
-        )
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Close,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.padding(4.dp)
+            )
+        }
         Spacer(Modifier.height(15.dp))
         MiniCustomButton(
-            icon = Icons.Filled.Replay,
             onClick = {
                 CoroutineScope(Dispatchers.Main).launch {
                     if (viewModel.isAi.not() or (viewModel.isAi and isTurnX.not())) viewModel.resetGame()
                 }
             },
-        )
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Replay,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.padding(4.dp)
+            )
+        }
     }
 }
 
