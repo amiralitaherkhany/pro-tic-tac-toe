@@ -1,5 +1,6 @@
 package com.amirali_apps.tictactoe.ui.game_mode_selection
 
+import LocaleHelper
 import android.content.res.Configuration
 import android.view.MotionEvent
 import androidx.compose.animation.AnimatedContent
@@ -35,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,6 +48,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -54,13 +57,52 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.amirali_apps.tictactoe.R
+import com.amirali_apps.tictactoe.ui.components.MiniCustomButton
 import com.amirali_apps.tictactoe.ui.game.AiLevel
 import com.amirali_apps.tictactoe.ui.navigation.GameScreens
 
 @Composable
+fun LocaleButton(
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    var selectedLocale by remember {
+        mutableStateOf<String>(
+            LocaleHelper.getSavedLanguage(context) ?: "en"
+        )
+    }
+    MiniCustomButton(
+        onClick = {
+            selectedLocale = if (selectedLocale == "fa") {
+                "en"
+            } else {
+                "fa"
+            }
+            LocaleHelper.setLanguage(
+                context,
+                selectedLocale
+            )
+            // (context as Activity).recreate()
+        },
+        modifier = modifier
+    ) {
+        Text(
+            selectedLocale,
+            style = MaterialTheme.typography.bodySmall.plus(
+                TextStyle(
+                    color = MaterialTheme.colorScheme.background,
+                    fontSize = 15.sp,
+                )
+            ),
+            modifier = Modifier.wrapContentSize()
+        )
+    }
+}
+
+@Composable
 fun GameModeSelectionScreen(
     navController: NavController,
-    viewModel: GameModeSelectionViewModel = viewModel()
+    viewModel: GameModeSelectionViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val configuration = LocalConfiguration.current
@@ -69,72 +111,81 @@ fun GameModeSelectionScreen(
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     Box {
         BackgroundImage(Modifier.fillMaxSize())
+
         Scaffold(containerColor = Color.Transparent) {
-            if (isPortrait) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it)
-                        .padding(horizontal = if (screenWidthDp > 500) (screenWidthDp * 0.15).dp else 0.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    GameTitle(modifier = Modifier.weight(0.50f))
-
-                    AnimatedContent(
-                        targetState = uiState,
-                        modifier = Modifier.weight(0.50f)
-                    ) { it ->
-                        when (it) {
-                            is UiState.SelectMode -> FirstContent(onSubmit = { isAi ->
-                                viewModel.onSelectModeSubmitted(isAi)
-                            })
-
-                            is UiState.Settings -> SecondContent(
-                                isAi = it.isAi,
-                                onSubmit = { isPro, selectedAiLevel ->
-                                    navController.navigate("${GameScreens.Game.name}/$isPro/${it.isAi}/$selectedAiLevel")
-                                },
-                                onBackPressed = {
-                                    viewModel.onBackPressed()
-                                },
-                            )
-                        }
-                    }
-                }
-            } else {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it)
-                        .padding(vertical = if (screenHeightDp > 500) (screenHeightDp * 0.15).dp else 0.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    GameTitle(
+            Box(modifier = Modifier.fillMaxSize()) {
+                if (isPortrait) {
+                    Column(
                         modifier = Modifier
-                            .weight(0.50f)
-                    )
+                            .fillMaxSize()
+                            .padding(it)
+                            .padding(horizontal = if (screenWidthDp > 500) (screenWidthDp * 0.15).dp else 0.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        GameTitle(modifier = Modifier.weight(0.50f))
 
-                    AnimatedContent(
-                        targetState = uiState,
-                        modifier = Modifier.weight(0.50f)
-                    ) { it ->
-                        when (it) {
-                            is UiState.SelectMode -> FirstContent(onSubmit = { isAi ->
-                                viewModel.onSelectModeSubmitted(isAi)
-                            })
+                        AnimatedContent(
+                            targetState = uiState,
+                            modifier = Modifier.weight(0.50f)
+                        ) { it ->
+                            when (it) {
+                                is UiState.SelectMode -> FirstContent(onSubmit = { isAi ->
+                                    viewModel.onSelectModeSubmitted(isAi)
+                                })
 
-                            is UiState.Settings -> SecondContent(
-                                isAi = it.isAi,
-                                onSubmit = { isPro, selectedAiLevel ->
-                                    navController.navigate("${GameScreens.Game.name}/$isPro/${it.isAi}/$selectedAiLevel")
-                                },
-                                onBackPressed = {
-                                    viewModel.onBackPressed()
-                                },
-                            )
+                                is UiState.Settings -> SecondContent(
+                                    isAi = it.isAi,
+                                    onSubmit = { isPro, selectedAiLevel ->
+                                        navController.navigate("${GameScreens.Game.name}/$isPro/${it.isAi}/$selectedAiLevel")
+                                    },
+                                    onBackPressed = {
+                                        viewModel.onBackPressed()
+                                    },
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(it)
+                            .padding(vertical = if (screenHeightDp > 500) (screenHeightDp * 0.15).dp else 0.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        GameTitle(
+                            modifier = Modifier
+                                .weight(0.50f)
+                        )
+
+                        AnimatedContent(
+                            targetState = uiState,
+                            modifier = Modifier.weight(0.50f)
+                        ) { it ->
+                            when (it) {
+                                is UiState.SelectMode -> FirstContent(onSubmit = { isAi ->
+                                    viewModel.onSelectModeSubmitted(isAi)
+                                })
+
+                                is UiState.Settings -> SecondContent(
+                                    isAi = it.isAi,
+                                    onSubmit = { isPro, selectedAiLevel ->
+                                        navController.navigate("${GameScreens.Game.name}/$isPro/${it.isAi}/$selectedAiLevel")
+                                    },
+                                    onBackPressed = {
+                                        viewModel.onBackPressed()
+                                    },
+                                )
+                            }
                         }
                     }
                 }
+                LocaleButton(
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(it)
+                        .padding(start = 20.dp),
+                )
             }
         }
     }
@@ -198,7 +249,7 @@ fun SecondContent(
     onBackPressed: () -> Unit
 ) {
     var isPro by remember { mutableStateOf(false) }
-    var selectedAiLevel by remember { mutableStateOf(0) }
+    var selectedAiLevel by remember { mutableIntStateOf(0) }
 
 
     Box {

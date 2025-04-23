@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pro TicTacToe</string>
+    <string name="start_game">شروع بازی</string>
+    <string name="ai">Ai</string>
+    <string name="friend">Friend</string>
+    <string name="select_opponent">انتخاب حریف</string>
+    <string name="pro">حرفه ای</string>
+    <string name="classic">کلاسیک</string>
+    <string name="select_mode">انتخاب حالت</string>
+    <string name="game_ai">AI - %1$d برد</string>
+    <string name="you_o">You - %1$d برد</string>
+    <string name="player_x">X - %1$d برد</string>
+    <string name="player_o">O - %1$d برد</string>
+    <string name="your_move">نوبت تو</string>
+    <string name="ai_s_move">AI’s Move</string>
+    <string name="you_lost">تو باختی :(</string>
+    <string name="winner_is_x">X برنده شد</string>
+    <string name="you_won_d">تو بردی :D</string>
+    <string name="winner_is_o">O برنده شد</string>
+    <string name="draw_play_again">مساوی، دوباره بازی کن</string>
+    <string name="empty_string" />
+    <string name="single_player">تک نفره</string>
+    <string name="play_with_a_friend">دو نفره</string>
+    <string name="how_do_you_want_to_play">چطوری میخوای بازی کنی؟</string>
+    <string name="select_ai_difficulty">انتخاب درجه سختی هوش مصنوعی</string>
+</resources>

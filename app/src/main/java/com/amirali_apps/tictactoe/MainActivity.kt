@@ -1,8 +1,7 @@
 package com.amirali_apps.tictactoe
 
-import android.content.Context
+import LocaleHelper
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,27 +31,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import java.util.Locale
-
-object LocaleHelper {
-    fun wrap(context: Context): Context {
-        val locale = Locale.ENGLISH
-        Locale.setDefault(locale)
-        val config = Configuration(context.resources.configuration)
-        config.setLocale(locale)
-
-        return context.createConfigurationContext(config)
-    }
-}
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.wrap(newBase))
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val language = LocaleHelper.getSavedLanguage(this) ?: "fa"
+        LocaleHelper.saveLanguage(
+            this,
+            language
+        )
         var keepOnScreenCondition = mutableStateOf(true)
         installSplashScreen().setKeepOnScreenCondition {
             keepOnScreenCondition.value
@@ -116,7 +104,7 @@ fun AppNavHost() {
                 navArgument("isPro") { type = NavType.BoolType },
                 navArgument("isAi") { type = NavType.BoolType },
                 navArgument("level") { type = NavType.IntType },
-                )
+            )
         ) { backStackEntry ->
             GameScreen(
                 navController = navController,
