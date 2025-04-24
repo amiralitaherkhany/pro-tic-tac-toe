@@ -6,6 +6,7 @@
     <application
         android:name=".MyApp"
         android:allowBackup="true"
+        android:appCategory="game"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/tic_tac_toe_icon"
@@ -17,6 +18,7 @@
         <activity
             android:name="com.amirali_apps.tictactoe.MainActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.TicTacToe.MySplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
