@@ -1,6 +1,7 @@
 package com.amirali_apps.tictactoe.ui.game_mode_selection
 
 import LocaleHelper
+import android.app.Activity
 import android.content.res.Configuration
 import android.view.MotionEvent
 import androidx.compose.animation.AnimatedContent
@@ -82,7 +83,7 @@ fun LocaleButton(
                 context,
                 selectedLocale
             )
-            // (context as Activity).recreate()
+            (context as Activity).recreate()
         },
         modifier = modifier
     ) {
