@@ -1,6 +1,5 @@
 package com.amirali_apps.tictactoe.ui.game_mode_selection
 
-import LocaleHelper
 import android.app.Activity
 import android.content.res.Configuration
 import android.view.MotionEvent
@@ -55,7 +54,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.amirali_apps.tictactoe.R
 import com.amirali_apps.tictactoe.ui.components.MiniCustomButton
@@ -65,25 +64,12 @@ import com.amirali_apps.tictactoe.ui.navigation.GameScreens
 @Composable
 fun LocaleButton(
     modifier: Modifier = Modifier,
+    selectedLocale: String,
+    onLocaleChanged: (String) -> Unit
 ) {
-    val context = LocalContext.current
-    var selectedLocale by remember {
-        mutableStateOf<String>(
-            LocaleHelper.getSavedLanguage(context) ?: "en"
-        )
-    }
     MiniCustomButton(
         onClick = {
-            selectedLocale = if (selectedLocale == "fa") {
-                "en"
-            } else {
-                "fa"
-            }
-            LocaleHelper.setLanguage(
-                context,
-                selectedLocale
-            )
-            (context as Activity).recreate()
+            onLocaleChanged(if (selectedLocale == "fa") "en" else "fa")
         },
         modifier = modifier
     ) {
@@ -103,13 +89,15 @@ fun LocaleButton(
 @Composable
 fun GameModeSelectionScreen(
     navController: NavController,
-    viewModel: GameModeSelectionViewModel = viewModel(),
+    viewModel: GameModeSelectionViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val selectedLocale by viewModel.settingState.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp
     val screenHeightDp = configuration.screenHeightDp
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+    val context = LocalContext.current
     Box {
         BackgroundImage(Modifier.fillMaxSize())
 
@@ -186,6 +174,11 @@ fun GameModeSelectionScreen(
                         .align(Alignment.TopStart)
                         .padding(it)
                         .padding(start = 20.dp),
+                    onLocaleChanged = { newLocale ->
+                        viewModel.changeLanguage(newLocale)
+                        (context as Activity).recreate()
+                    },
+                    selectedLocale = selectedLocale.selectedLanguage
                 )
             }
         }

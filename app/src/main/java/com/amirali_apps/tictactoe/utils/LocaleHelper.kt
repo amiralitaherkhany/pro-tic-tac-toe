@@ -1,44 +1,30 @@
 import android.app.LocaleManager
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.os.Build
 import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.edit
 import androidx.core.os.LocaleListCompat
 
-object LocaleHelper {
-    fun getSavedLanguage(context: Context): String? {
-        val sharedPreferences = context.getSharedPreferences(
-            "language_prefs",
-            MODE_PRIVATE
-        )
-        return sharedPreferences.getString(
-            "language",
-            null
-        )
-    }
+data class Language(
+    val code: String,
+    val displayLanguage: String
+)
 
-    fun saveLanguage(
-        context: Context,
-        languageCode: String,
-    ) {
-        val sharedPreferences = context.getSharedPreferences(
-            "language_prefs",
-            MODE_PRIVATE
-        )
-        sharedPreferences.edit() {
-            putString(
-                "language",
-                languageCode
-            )
-            apply()
-        }
-    }
+val appLanguages = listOf(
+    Language(
+        "en",
+        "English"
+    ), // default language
+    Language(
+        "fa",
+        "farsi"
+    ),
+)
 
-    fun setLanguage(
+class AppLocaleManager {
+    fun changeLanguage(
         context: Context,
-        languageCode: String,
+        languageCode: String
     ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.getSystemService(LocaleManager::class.java).applicationLocales =
@@ -46,9 +32,20 @@ object LocaleHelper {
         } else {
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
         }
-        saveLanguage(
-            context,
-            languageCode
-        )
+    }
+
+    fun getLanguageCode(context: Context): String {
+        val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.getSystemService(LocaleManager::class.java)
+                ?.applicationLocales
+                ?.get(0)
+        } else {
+            AppCompatDelegate.getApplicationLocales().get(0)
+        }
+        return locale?.language ?: getDefaultLanguageCode()
+    }
+
+    private fun getDefaultLanguageCode(): String {
+        return appLanguages.first().code
     }
 }

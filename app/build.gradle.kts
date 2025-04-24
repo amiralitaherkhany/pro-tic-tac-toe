@@ -9,7 +9,11 @@ plugins {
 android {
     namespace = "com.amirali_apps.tictactoe"
     compileSdk = 36
-
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
     defaultConfig {
         applicationId = "com.amirali_apps.tictactoe"
         minSdk = 24
@@ -58,7 +62,7 @@ android {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation(libs.androidx.appcompat)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
