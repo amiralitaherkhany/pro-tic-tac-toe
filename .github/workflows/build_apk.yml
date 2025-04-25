@@ -43,14 +43,13 @@ jobs:
             -keypass "$SIGNING_KEY_PASSWORD" \
             app/build/outputs/apk/release/app-release-unsigned.apk "$SIGNING_KEY_ALIAS"
       
-      - name: Rename Signed APK
-        run: mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
+      
 
 
       - name: Upload Signed apk as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: signed-apk
-          path: app/build/outputs/apk/release/app-release.apk
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
 
       
