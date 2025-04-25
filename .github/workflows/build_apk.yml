@@ -26,10 +26,6 @@ jobs:
       - name: Build apk
         run: ./gradlew assembleRelease
 
-      - name: Check if APK exists
-        run: ls -R app/build/outputs/apk/
-
-
       - name: Decode Keystore File
         env:
           SIGNING_STORE: ${{ secrets.SIGNING_STORE_BASE64 }}
@@ -45,8 +41,12 @@ jobs:
             -keystore release.jks \
             -storepass "$SIGNING_STORE_PASSWORD" \
             -keypass "$SIGNING_KEY_PASSWORD" \
-            app/build/outputs/apk/release/app-release.apk "$SIGNING_KEY_ALIAS"
+            app/build/outputs/apk/release/app-release-unsigned.apk "$SIGNING_KEY_ALIAS"
       
+      - name: Rename Signed APK
+        run: mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release.apk
+
+
       - name: Upload Signed apk as Artifact
         uses: actions/upload-artifact@v4
         with:
