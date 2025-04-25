@@ -31,14 +31,10 @@ jobs:
 
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.SIGNING_STORE_BASE64 }}" | base64 -d > my-release-key.jks
+          echo "${{ secrets.SIGNING_STORE_BASE64 }}" | base64 --decode > my-release-key.jks
 
       - name: Build signed release APK
-        run: ./gradlew assembleRelease \
-          -Pandroid.injected.signing.store.file=my-release-key.jks \
-          -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
-          -Pandroid.injected.signing.key.alias=$KEY_ALIAS \
-          -Pandroid.injected.signing.key.password=$KEY_PASSWORD
+        run: ./gradlew assembleReleas -Pandroid.injected.signing.store.file=my-release-key.jks -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$KEY_ALIAS -Pandroid.injected.signing.key.password=$KEY_PASSWORD
 
       - name: Upload APK to GitHub Artifacts
         uses: actions/upload-artifact@v4
