@@ -26,6 +26,10 @@ jobs:
       - name: Build apk
         run: ./gradlew assembleRelease
 
+      - name: Check if APK exists
+        run: ls -R app/build/outputs/apk/
+
+
       - name: Decode Keystore File
         env:
           SIGNING_STORE: ${{ secrets.SIGNING_STORE_BASE64 }}
