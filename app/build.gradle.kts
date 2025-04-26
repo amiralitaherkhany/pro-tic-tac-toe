@@ -52,9 +52,12 @@ android {
                 throw GradleException("KEYSTORE_FILE_PATH is not set in local.properties or environment variables")
             }
             storeFile = file(keystorePath)
-            storePassword = System.getenv("KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("KEY_ALIAS")
-            keyPassword = System.getenv("KEY_PASSWORD")
+            storePassword =
+                if (localPropertiesFile.exists()) keystoreProperties.getProperty("KEYSTORE_PASSWORD") else System.getenv("KEYSTORE_PASSWORD")
+            keyAlias =
+                if (localPropertiesFile.exists()) keystoreProperties.getProperty("KEY_ALIAS") else System.getenv("KEY_ALIAS")
+            keyPassword =
+                if (localPropertiesFile.exists()) keystoreProperties.getProperty("KEY_PASSWORD") else System.getenv("KEY_PASSWORD")
         }
     }
 
