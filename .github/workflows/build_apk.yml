@@ -21,7 +21,9 @@ jobs:
         java-version: '17'  
 
     - name: Decode Keystore file
-      run: echo "${{ secrets.SIGNING_STORE_BASE64 }}" | base64 -d > my-release-key.jks
+      run: |
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > my-release-key.jks
+        chmod +r my-release-key.jks
 
     - name: Build APK
       run: ./gradlew assembleRelease
