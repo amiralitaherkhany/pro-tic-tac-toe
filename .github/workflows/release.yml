@@ -36,10 +36,10 @@ jobs:
       - name: Build AAB
         run: ./gradlew bundleRelease
         env:
-        KEYSTORE_FILE_PATH: ${{ github.workspace }}/release.jks
-        KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-        KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-        KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+         KEYSTORE_FILE_PATH: ${{ github.workspace }}/release.jks
+         KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+         KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+         KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
       
 
