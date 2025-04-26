@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,21 @@ plugins {
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
 }
+val keystoreProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+
+if (localPropertiesFile.exists()) {
+    keystoreProperties.load(localPropertiesFile.inputStream())
+}
+
+fun getKey(propName: String): String? {
+    return if (keystoreProperties.containsKey(propName)) {
+        keystoreProperties.getProperty(propName)
+    } else {
+        System.getenv(propName)
+    }
+}
+
 
 android {
     namespace = "com.amirali_apps.tictactoe"
@@ -27,8 +44,23 @@ android {
         }
     }
 
+
+    signingConfigs {
+        create("release") {
+            val keystorePath = getKey("KEYSTORE_FILE_PATH")
+            if (keystorePath.isNullOrEmpty()) {
+                throw GradleException("KEYSTORE_FILE_PATH is not set in local.properties or environment variables")
+            }
+            storeFile = file(keystorePath)
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
