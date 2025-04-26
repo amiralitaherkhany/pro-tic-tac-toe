@@ -22,7 +22,7 @@ jobs:
 
     - name: Decode Keystore file
       run: |
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -di > my-release-key.jks
+        echo "${{ secrets.SIGNING_STORE_BASE64 }}" | base64 -di > my-release-key.jks
         chmod 644 my-release-key.jks
 
     - name: Verify Keystore
