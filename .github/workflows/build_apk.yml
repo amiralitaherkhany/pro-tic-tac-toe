@@ -1,43 +1,38 @@
-name: Android Release Build
+name: Build APK
 
 on:
   push:
     branches:
-      - master
-  workflow_dispatch:
-
+     - master  
+  workflow_dispatch:   
+  
 jobs:
   build:
-    name: Build and Sign APK
     runs-on: ubuntu-latest
 
-    env:
-      KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-      KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-      KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'  
 
-      - name: Download Gradle wrapper
-        run: chmod +x ./gradlew
+    - name: Decode Keystore file
+      run: echo "${{ secrets.SIGNING_STORE_BASE64 }}" | base64 -d > my-release-key.jks
 
-      - name: Decode Keystore
-        run: |
-          echo "${{ secrets.SIGNING_STORE_BASE64 }}" | base64 --decode > my-release-key.jks
+    - name: Build APK
+      run: ./gradlew assembleRelease
+      env:
+        KEYSTORE_FILE_PATH: ${{ github.workspace }}/my-release-key.jks
+        KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
-      - name: Build signed release APK
-        run: ./gradlew assembleReleas -Pandroid.injected.signing.store.file=my-release-key.jks -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$KEY_ALIAS -Pandroid.injected.signing.key.password=$KEY_PASSWORD
-
-      - name: Upload APK to GitHub Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-apk
-          path: app/build/outputs/apk/release/*.apk
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-apk
+        path: app/build/outputs/apk/release/app-release.apk
