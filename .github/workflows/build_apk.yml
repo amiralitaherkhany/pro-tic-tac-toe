@@ -1,47 +1,47 @@
-name: Build APK
+name: Build Myket APK
 
 on:
   push:
     branches:
-     - master  
-  workflow_dispatch:   
+      - master
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-    - name: Decode Keystore file
-      run: |
-        echo "${{ secrets.SIGNING_STORE_BASE64 }}" | base64 -di > my-release-key.jks
-        chmod 644 my-release-key.jks
+      - name: Decode Keystore file
+        run: |
+          echo "${{ secrets.SIGNING_STORE_BASE64 }}" | base64 -di > my-release-key.jks
+          chmod 644 my-release-key.jks
 
-    - name: Verify Keystore
-      run: |
-        keytool -list -v -keystore my-release-key.jks -storepass ${{ secrets.SIGNING_STORE_PASSWORD }}
+      - name: Verify Keystore
+        run: |
+          keytool -list -v -keystore my-release-key.jks -storepass ${{ secrets.SIGNING_STORE_PASSWORD }}
 
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
 
-    - name: Build APK
-      run: ./gradlew assembleRelease
-      env:
-        KEYSTORE_FILE_PATH: ${{ github.workspace }}/my-release-key.jks
-        KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-        KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-        KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+      - name: Build Myket APK
+        run: ./gradlew assembleMyketRelease
+        env:
+          KEYSTORE_FILE_PATH: ${{ github.workspace }}/my-release-key.jks
+          KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: release-apk
-        path: app/build/outputs/apk/release/app-release.apk
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: app/build/outputs/apk/myket/release/app-myket-release.apk
