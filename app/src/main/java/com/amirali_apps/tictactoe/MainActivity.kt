@@ -4,6 +4,7 @@ import AppLocaleManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -52,6 +53,21 @@ class MainActivity : ComponentActivity() {
         }
         enableEdgeToEdge()
         setContent {
+            when (BuildConfig.FLAVOR) {
+                "myket" -> {
+                    Log.d(
+                        "MainActivity",
+                        "onCreate: myket"
+                    )
+                }
+
+                "bazaar" -> {
+                    Log.d(
+                        "MainActivity",
+                        "onCreate: bazaar"
+                    )
+                }
+            }
             LaunchedEffect(null) {
                 delay(1000L)
                 keepOnScreenCondition.value = false

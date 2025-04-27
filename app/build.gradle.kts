@@ -61,6 +61,8 @@ android {
         }
     }
 
+
+
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("release")
@@ -70,6 +72,16 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+    flavorDimensions += listOf("store")
+
+    productFlavors {
+        create("bazaar") {
+            dimension = "store"
+        }
+        create("myket") {
+            dimension = "store"
         }
     }
     compileOptions {
