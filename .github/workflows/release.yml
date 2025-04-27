@@ -1,7 +1,7 @@
 name: Build AAB And Publish To Bazaar
 
 on:
-  workflow_dispatch:  
+  workflow_dispatch:
     inputs:
       changelog_fa:
         description: 'توضیحات تغییرات نسخه (فارسی)'
@@ -33,22 +33,22 @@ jobs:
       - name: Grant Execute Permission to Gradle
         run: chmod +x gradlew
 
-      - name: Build AAB
-        run: ./gradlew bundleRelease
+      - name: Build Bazaar AAB
+        run: ./gradlew bundleBazaarRelease
         env:
-         KEYSTORE_FILE_PATH: ${{ github.workspace }}/release.jks
-         KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-         KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-         KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          KEYSTORE_FILE_PATH: ${{ github.workspace }}/release.jks
+          KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
-      
+
 
       - name: Generate Bin File with BundleSigner
         env:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: |
           java -jar bundlesigner-0.1.13.jar genbin \
-               --bundle app/build/outputs/bundle/release/app-release.aab \
+               --bundle app/build/outputs/bundle/bazaarRelease/app-bazaar-release.aab \
                --bin . \
                --v2-signing-enabled true \
                --v3-signing-enabled false \
@@ -59,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: signed-aab
-          path: app/build/outputs/bundle/release/app-release.aab
+          path: app/build/outputs/bundle/bazaarRelease/app-bazaar-release.aab
 
       - name: Upload Bin File as Artifact
         uses: actions/upload-artifact@v4
@@ -78,14 +78,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: signed-aab
-          path: app/build/outputs/bundle/release/
-          
+          path: app/build/outputs/bundle/bazaarRelease/
+
       - name: Download Bin File
         uses: actions/download-artifact@v4
         with:
           name: signed-bin
           path: .
-          
+
       - name: Create New Release in Cafe Bazaar
         run: |
           response=$(curl --silent --show-error --write-out "%{http_code}" --output response.json --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/' \
@@ -102,7 +102,7 @@ jobs:
           response=$(curl --silent --show-error --write-out "%{http_code}" --output response.json --verbose --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/upload-aab/' \
               --header 'CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}' \
               --header 'Content-Type: multipart/form-data' \
-              --form 'aab=@app/build/outputs/bundle/release/app-release.aab')
+              --form 'aab=@app/build/outputs/bundle/bazaarRelease/app-bazaar-release.aab')
 
           # بررسی کد وضعیت HTTP
           http_code=$(echo $response | tail -n 1)
@@ -145,7 +145,7 @@ jobs:
               cat response.json
               exit 1
           fi
-          
+
       - name: Check Bundle Status Periodically
         run: |
           while true; do
@@ -166,7 +166,7 @@ jobs:
             echo "⏳ Bundle is still processing. Checking again in 60 seconds..."
             sleep 60
           done
-          
+
       - name: Commit Release to Cafe Bazaar
         run: |
           response=$(curl --silent --show-error --write-out "%{http_code}" --output response.json --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/commit/' \
