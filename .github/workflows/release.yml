@@ -65,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: signed-bin
-          path: app-release.bin
+          path: app-bazaar-release.bin
 
   publish:
     runs-on: ubuntu-latest
@@ -126,7 +126,7 @@ jobs:
           response=$(curl --silent --show-error --write-out "%{http_code}" --output response.json --verbose --request POST 'https://api.pishkhan.cafebazaar.ir/v1/apps/releases/upload-bin/' \
               --header 'CAFEBAZAAR-PISHKHAN-API-SECRET: ${{ secrets.BAZAR_API_KEY }}' \
               --header 'Content-Type: multipart/form-data' \
-              --form 'file=@app-release.bin')
+              --form 'file=@app-bazaar-release.bin')
 
           # بررسی کد وضعیت HTTP
           http_code=$(echo $response | tail -n 1)
