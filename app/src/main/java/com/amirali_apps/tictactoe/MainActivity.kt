@@ -1,13 +1,12 @@
 package com.amirali_apps.tictactoe
 
-import AppLocaleManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -40,18 +39,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import java.util.Locale
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-    override fun attachBaseContext(newBase: Context) {
-        val currentLang = AppLocaleManager().getLanguageCode(newBase)
-        newBase.resources.configuration.setLocale(Locale.forLanguageTag(currentLang))
-
-        applyOverrideConfiguration(newBase.resources.configuration)
-        super.attachBaseContext(newBase)
-    }
-
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var keepOnScreenCondition = mutableStateOf(true)

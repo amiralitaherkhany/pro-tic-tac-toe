@@ -1,6 +1,5 @@
 package com.amirali_apps.tictactoe.ui.game_mode_selection
 
-import android.app.Activity
 import android.content.res.Configuration
 import android.view.MotionEvent
 import androidx.compose.animation.AnimatedContent
@@ -48,7 +47,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -97,7 +95,6 @@ fun GameModeSelectionScreen(
     val screenWidthDp = configuration.screenWidthDp
     val screenHeightDp = configuration.screenHeightDp
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-    val context = LocalContext.current
     Box {
         BackgroundImage(Modifier.fillMaxSize())
 
@@ -176,7 +173,6 @@ fun GameModeSelectionScreen(
                         .padding(start = 20.dp),
                     onLocaleChanged = { newLocale ->
                         viewModel.changeLanguage(newLocale)
-                        (context as Activity).recreate()
                     },
                     selectedLocale = selectedLocale.selectedLanguage
                 )

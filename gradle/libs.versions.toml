@@ -2,7 +2,7 @@
 agp = "8.9.2"
 appcompat = "1.7.0"
 converterGson = "2.11.0"
-coreSplashscreen = "1.0.1"
+coreSplashscreen = "1.2.0-beta02"
 hiltAndroidGradlePlugin = "2.56.1"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.1.0"
