@@ -15,9 +15,9 @@
     <string name="your_move">نوبت تو</string>
     <string name="ai_s_move">AI’s Move</string>
     <string name="you_lost">تو باختی :(</string>
-    <string name="winner_is_x">X برنده شد</string>
+    <string name="winner_is_x">‫X برنده شد‬</string>
     <string name="you_won_d">تو بردی :D</string>
-    <string name="winner_is_o">O برنده شد</string>
+    <string name="winner_is_o">‫O برنده شد‬</string>
     <string name="draw_play_again">مساوی، دوباره بازی کن</string>
     <string name="empty_string" />
     <string name="single_player">تک نفره</string>
@@ -25,10 +25,10 @@
     <string name="how_do_you_want_to_play">چطوری میخوای بازی کنی؟</string>
     <string name="select_ai_difficulty">انتخاب درجه سختی هوش مصنوعی</string>
     <string name="do_you_enjoy_the_game">از بازی لذت بردی؟</string>
-    <string name="rate_us_on">به ما در %1$s نمره بده </string>
+    <string name="rate_us_on">به ما در %1$s امتیاز بده </string>
     <string name="myket">مایکت</string>
     <string name="bazaar">بازار</string>
     <string name="store">فروشگاه</string>
-    <string name="rate">نمره بده</string>
+    <string name="rate">امتیاز بده</string>
     <string name="never">هرگز</string>
 </resources>

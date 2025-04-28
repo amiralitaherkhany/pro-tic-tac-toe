@@ -1,9 +1,7 @@
 package com.amirali_apps.tictactoe
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavType
@@ -50,21 +47,6 @@ class MainActivity : AppCompatActivity() {
         }
         enableEdgeToEdge()
         setContent {
-            when (BuildConfig.FLAVOR) {
-                "myket" -> {
-                    Log.d(
-                        "MainActivity",
-                        "onCreate: myket"
-                    )
-                }
-
-                "bazaar" -> {
-                    Log.d(
-                        "MainActivity",
-                        "onCreate: bazaar"
-                    )
-                }
-            }
             LaunchedEffect(null) {
                 delay(1000L)
                 keepOnScreenCondition.value = false
@@ -72,7 +54,6 @@ class MainActivity : AppCompatActivity() {
             TicTacToeTheme {
                 AppNavHost()
                 var showUpdateDialog by remember { mutableStateOf(false) }
-                var showRateDialog by remember { mutableStateOf(increaseLaunchCount(this)) }
                 var response by remember { mutableStateOf<UpdateModel?>(null) }
                 val context = LocalContext.current
                 LaunchedEffect(null) {
@@ -104,52 +85,6 @@ class MainActivity : AppCompatActivity() {
                         showUpdateDialog = false
                     }
                 )
-                RateDialog(
-                    showDialog = showRateDialog,
-                    onDismiss = {
-                        showRateDialog = false
-                    },
-                    onRateClick = {
-                        when (BuildConfig.FLAVOR) {
-                            "myket" -> {
-                                val intent = context.packageManager
-                                    .getLaunchIntentForPackage("ir.mservices.market")
-
-                                if (intent != null) {
-                                    val url = "myket://comment?id=$packageName"
-                                    val intent = Intent()
-                                    intent.action = Intent.ACTION_VIEW
-                                    intent.data = url.toUri()
-                                    context.startActivity(intent)
-                                } else {
-                                    val intent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        ("https://myket.ir").toUri()
-                                    )
-                                    context.startActivity(intent)
-                                }
-                            }
-
-                            "bazaar" -> {
-                                val intent = context.packageManager
-                                    .getLaunchIntentForPackage("com.farsitel.bazaar")
-                                if (intent != null) {
-                                    val intent = Intent(Intent.ACTION_EDIT)
-                                    intent.data = ("bazaar://details?id=$packageName").toUri()
-                                    intent.setPackage("com.farsitel.bazaar")
-                                    context.startActivity(intent)
-                                } else {
-                                    val intent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        ("https://cafebazaar.ir").toUri()
-                                    )
-                                    context.startActivity(intent)
-                                }
-                            }
-                        }
-                        showRateDialog = false
-                    },
-                )
             }
         }
     }
@@ -176,43 +111,6 @@ fun AppNavHost() {
             )
         }
     }
-}
-
-fun increaseLaunchCount(
-    context: Context,
-): Boolean {
-    val sharedPreferences = context.getSharedPreferences(
-        "app_prefs",
-        Context.MODE_PRIVATE
-    )
-    val launchCount = sharedPreferences.getInt(
-        "launch_count",
-        0
-    )
-    val isIncrementing = sharedPreferences.getBoolean(
-        "is_incrementing",
-        true
-    )
-    if (isIncrementing) {
-        val newLaunchCount = launchCount + 1
-        sharedPreferences.edit() {
-            putInt(
-                "launch_count",
-                newLaunchCount
-            )
-        }
-        if (newLaunchCount == 3) {
-            sharedPreferences.edit {
-                putBoolean(
-                    "is_incrementing",
-                    false
-                )
-            }
-            return true
-        }
-    }
-
-    return false
 }
 
 @Composable

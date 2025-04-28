@@ -1,6 +1,8 @@
 package com.amirali_apps.tictactoe.ui.game
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.RepeatMode
@@ -41,6 +43,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -48,6 +53,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -55,9 +61,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.edit
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.amirali_apps.tictactoe.BuildConfig
 import com.amirali_apps.tictactoe.R
+import com.amirali_apps.tictactoe.RateDialog
 import com.amirali_apps.tictactoe.models.Move
 import com.amirali_apps.tictactoe.ui.components.MiniCustomButton
 import com.amirali_apps.tictactoe.ui.navigation.GameScreens
@@ -68,6 +78,43 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+fun increaseFinishGameCount(
+    context: Context,
+): Boolean {
+    val sharedPreferences = context.getSharedPreferences(
+        "app_prefs",
+        Context.MODE_PRIVATE
+    )
+    val launchCount = sharedPreferences.getInt(
+        "finish_count",
+        0
+    )
+    val isIncrementing = sharedPreferences.getBoolean(
+        "is_incrementing",
+        true
+    )
+    if (isIncrementing) {
+        val newLaunchCount = launchCount + 1
+        sharedPreferences.edit() {
+            putInt(
+                "finish_count",
+                newLaunchCount
+            )
+        }
+        if (newLaunchCount == 3) {
+            sharedPreferences.edit {
+                putBoolean(
+                    "is_incrementing",
+                    false
+                )
+            }
+            return true
+        }
+    }
+
+    return false
+}
+
 @Composable
 fun GameScreen(
     gameViewModel: GameViewModel = hiltViewModel(),
@@ -75,8 +122,12 @@ fun GameScreen(
 ) {
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-
-
+    val context = LocalContext.current
+    var showRateDialog by remember { mutableStateOf(false) }
+    val isGameFinished by gameViewModel.isGameFinished.collectAsState()
+    if (isGameFinished) {
+        showRateDialog = increaseFinishGameCount(context)
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -104,6 +155,52 @@ fun GameScreen(
             GameOverComposable(
                 navController = navController,
                 gameViewModel = gameViewModel,
+            )
+            RateDialog(
+                showDialog = showRateDialog,
+                onDismiss = {
+                    showRateDialog = false
+                },
+                onRateClick = {
+                    when (BuildConfig.FLAVOR) {
+                        "myket" -> {
+                            val intent = context.packageManager
+                                .getLaunchIntentForPackage("ir.mservices.market")
+
+                            if (intent != null) {
+                                val url = "myket://comment?id=${context.packageName}"
+                                val intent = Intent()
+                                intent.action = Intent.ACTION_VIEW
+                                intent.data = url.toUri()
+                                context.startActivity(intent)
+                            } else {
+                                val intent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    ("https://myket.ir").toUri()
+                                )
+                                context.startActivity(intent)
+                            }
+                        }
+
+                        "bazaar" -> {
+                            val intent = context.packageManager
+                                .getLaunchIntentForPackage("com.farsitel.bazaar")
+                            if (intent != null) {
+                                val intent = Intent(Intent.ACTION_EDIT)
+                                intent.data = ("bazaar://details?id=${context.packageName}").toUri()
+                                intent.setPackage("com.farsitel.bazaar")
+                                context.startActivity(intent)
+                            } else {
+                                val intent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    ("https://cafebazaar.ir").toUri()
+                                )
+                                context.startActivity(intent)
+                            }
+                        }
+                    }
+                    showRateDialog = false
+                },
             )
         }
     }
@@ -468,8 +565,6 @@ fun Board(
     val isGoingToDeleteList by viewModel.isGoingToDeleteList.collectAsState()
     val xWins by viewModel.xWins.collectAsState()
     val oWins by viewModel.oWins.collectAsState()
-    val configuration = LocalConfiguration.current
-    configuration.screenWidthDp
 
 
     BoxWithConstraints(contentAlignment = Alignment.Center) {
