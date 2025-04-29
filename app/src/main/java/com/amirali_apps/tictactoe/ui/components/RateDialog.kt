@@ -1,11 +1,13 @@
 package com.amirali_apps.tictactoe.ui.components
 
+import AppLocaleManager
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -20,7 +22,7 @@ fun RateDialog(
     onRateClick: () -> Unit
 ) {
     if (showDialog) {
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        CompositionLocalProvider(LocalLayoutDirection provides if (AppLocaleManager().getLanguageCode(LocalContext.current) == "fa") LayoutDirection.Rtl else LayoutDirection.Ltr) {
             AlertDialog(
                 onDismissRequest = onDismiss,
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,

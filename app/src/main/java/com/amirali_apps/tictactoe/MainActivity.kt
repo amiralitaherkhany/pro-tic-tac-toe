@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                             try {
                                 response = RetrofitClient.retrofitService.checkForUpdate()
                                 val latestVersion = response?.latestVersion ?: ""
-                                if (latestVersion.isNotEmpty() && latestVersion != BuildConfig.VERSION_NAME) {
+                                if (latestVersion.isNotEmpty() && latestVersion != BuildConfig.VERSION_NAME && savedInstanceState == null) {
                                     showUpdateDialog = true
                                 }
                             } catch (_: Exception) {

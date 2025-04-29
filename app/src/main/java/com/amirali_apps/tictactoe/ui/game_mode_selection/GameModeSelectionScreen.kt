@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.Elderly
 import androidx.compose.material.icons.filled.Person4
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.SmartToy
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -45,7 +44,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
@@ -77,25 +75,16 @@ fun LocaleButton(
         },
         modifier = modifier
     ) {
-        if (isActive) {
-            Text(
-                selectedLocale,
-                style = MaterialTheme.typography.bodySmall.plus(
-                    TextStyle(
-                        color = MaterialTheme.colorScheme.background,
-                        fontSize = 15.sp,
-                    )
-                ),
-                modifier = Modifier.wrapContentSize()
-            )
-        } else {
-            CircularProgressIndicator(
-                color = Color.White,
-                strokeCap = StrokeCap.Round,
-                strokeWidth = 3.dp,
-                modifier = Modifier.padding(7.dp),
-            )
-        }
+        Text(
+            selectedLocale,
+            style = MaterialTheme.typography.bodySmall.plus(
+                TextStyle(
+                    color = MaterialTheme.colorScheme.background,
+                    fontSize = 15.sp,
+                )
+            ),
+            modifier = Modifier.wrapContentSize()
+        )
     }
 }
 
