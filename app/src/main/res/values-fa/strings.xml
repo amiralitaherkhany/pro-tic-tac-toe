@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Pro TicTacToe</string>
+    <string name="app_name">دوز حرفه ای</string>
     <string name="start_game">شروع بازی</string>
     <string name="ai">Ai</string>
     <string name="friend">Friend</string>

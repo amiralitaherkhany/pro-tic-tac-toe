@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameModeSelectionViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) :
     ViewModel() {
     private val _uiState = MutableStateFlow<UiState>(UiState.SelectMode)
@@ -31,6 +31,12 @@ class GameModeSelectionViewModel @Inject constructor(
 
     init {
         loadInitialLanguage()
+    }
+
+    fun getLanguage(): String {
+        _settingState.value =
+            _settingState.value.copy(selectedLanguage = appLocaleManager.getLanguageCode(context))
+        return appLocaleManager.getLanguageCode(context)
     }
 
     private fun loadInitialLanguage() {

@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Elderly
 import androidx.compose.material.icons.filled.Person4
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.SmartToy
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -33,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -43,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
@@ -63,24 +66,36 @@ import com.amirali_apps.tictactoe.ui.navigation.GameScreens
 fun LocaleButton(
     modifier: Modifier = Modifier,
     selectedLocale: String,
-    onLocaleChanged: (String) -> Unit
+    onLocaleChanged: (String) -> Unit,
+    isActive: Boolean,
 ) {
     MiniCustomButton(
         onClick = {
-            onLocaleChanged(if (selectedLocale == "fa") "en" else "fa")
+            if (isActive) {
+                onLocaleChanged(if (selectedLocale == "fa") "en" else "fa")
+            }
         },
         modifier = modifier
     ) {
-        Text(
-            selectedLocale,
-            style = MaterialTheme.typography.bodySmall.plus(
-                TextStyle(
-                    color = MaterialTheme.colorScheme.background,
-                    fontSize = 15.sp,
-                )
-            ),
-            modifier = Modifier.wrapContentSize()
-        )
+        if (isActive) {
+            Text(
+                selectedLocale,
+                style = MaterialTheme.typography.bodySmall.plus(
+                    TextStyle(
+                        color = MaterialTheme.colorScheme.background,
+                        fontSize = 15.sp,
+                    )
+                ),
+                modifier = Modifier.wrapContentSize()
+            )
+        } else {
+            CircularProgressIndicator(
+                color = Color.White,
+                strokeCap = StrokeCap.Round,
+                strokeWidth = 3.dp,
+                modifier = Modifier.padding(7.dp),
+            )
+        }
     }
 }
 
@@ -95,6 +110,11 @@ fun GameModeSelectionScreen(
     val screenWidthDp = configuration.screenWidthDp
     val screenHeightDp = configuration.screenHeightDp
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+    var isActive by remember { mutableStateOf(true) }
+    LaunchedEffect(configuration) {
+        viewModel.getLanguage()
+        isActive = true
+    }
     Box {
         BackgroundImage(Modifier.fillMaxSize())
 
@@ -173,8 +193,10 @@ fun GameModeSelectionScreen(
                         .padding(start = 20.dp),
                     onLocaleChanged = { newLocale ->
                         viewModel.changeLanguage(newLocale)
+                        isActive = false
                     },
-                    selectedLocale = selectedLocale.selectedLanguage
+                    selectedLocale = selectedLocale.selectedLanguage,
+                    isActive = isActive
                 )
             }
         }

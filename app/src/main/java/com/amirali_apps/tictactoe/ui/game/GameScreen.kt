@@ -67,9 +67,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.amirali_apps.tictactoe.BuildConfig
 import com.amirali_apps.tictactoe.R
-import com.amirali_apps.tictactoe.RateDialog
 import com.amirali_apps.tictactoe.models.Move
 import com.amirali_apps.tictactoe.ui.components.MiniCustomButton
+import com.amirali_apps.tictactoe.ui.components.RateDialog
 import com.amirali_apps.tictactoe.ui.navigation.GameScreens
 import com.amirali_apps.tictactoe.ui.theme.accent1
 import com.amirali_apps.tictactoe.ui.theme.accent2
