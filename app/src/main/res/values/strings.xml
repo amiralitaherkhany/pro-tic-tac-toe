@@ -30,4 +30,8 @@
     <string name="store">store</string>
     <string name="rate">Rate</string>
     <string name="never">Never</string>
+    <string name="new_update_is_released">New Update is Released</string>
+    <string name="update_to_get_new_features">Update to Get New Features!</string>
+    <string name="update">Update</string>
+    <string name="later">Later</string>
 </resources>

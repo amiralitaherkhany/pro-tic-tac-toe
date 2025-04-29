@@ -5,7 +5,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.LayoutDirection
+import com.amirali_apps.tictactoe.R
 
 @Composable
 fun UpdateDialog(
@@ -14,53 +19,55 @@ fun UpdateDialog(
     onDownloadClick: () -> Unit
 ) {
     if (showDialog) {
-        AlertDialog(
-            onDismissRequest = onDismiss,
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            title = {
-                Text(
-                    text = "New Update is Released",
-                    style = MaterialTheme.typography.bodyLarge.plus(
-                        TextStyle(
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    )
-                )
-            },
-            text = {
-                Text(
-                    text = "Update to Get New Features!",
-                    style = MaterialTheme.typography.bodyMedium.plus(
-                        TextStyle(
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    )
-                )
-            },
-            confirmButton = {
-                Button(onClick = onDownloadClick) {
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+            AlertDialog(
+                onDismissRequest = onDismiss,
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                title = {
                     Text(
-                        "Update",
-                        style = MaterialTheme.typography.bodyMedium.plus(
+                        text = stringResource(R.string.new_update_is_released),
+                        style = MaterialTheme.typography.bodyLarge.plus(
                             TextStyle(
-                                color = MaterialTheme.colorScheme.secondary
+                                color = MaterialTheme.colorScheme.primary
                             )
                         )
                     )
-                }
-            },
-            dismissButton = {
-                Button(onClick = onDismiss) {
+                },
+                text = {
                     Text(
-                        "Later",
+                        text = stringResource(R.string.update_to_get_new_features),
                         style = MaterialTheme.typography.bodyMedium.plus(
                             TextStyle(
-                                color = MaterialTheme.colorScheme.secondary
+                                color = MaterialTheme.colorScheme.primary
                             )
                         )
                     )
+                },
+                confirmButton = {
+                    Button(onClick = onDownloadClick) {
+                        Text(
+                            stringResource(R.string.update),
+                            style = MaterialTheme.typography.bodyMedium.plus(
+                                TextStyle(
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            )
+                        )
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = onDismiss) {
+                        Text(
+                            stringResource(R.string.later),
+                            style = MaterialTheme.typography.bodyMedium.plus(
+                                TextStyle(
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            )
+                        )
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }

@@ -6,12 +6,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavType
@@ -45,40 +48,42 @@ class MainActivity : AppCompatActivity() {
                 delay(1000L)
                 keepOnScreenCondition.value = false
             }
-            TicTacToeTheme {
-                AppNavHost()
-                var showUpdateDialog by remember { mutableStateOf(false) }
-                var response by remember { mutableStateOf<UpdateModel?>(null) }
-                val context = LocalContext.current
-                LaunchedEffect(null) {
-                    withContext(Dispatchers.IO) {
-                        try {
-                            response = RetrofitClient.retrofitService.checkForUpdate()
-                            val latestVersion = response?.latestVersion ?: ""
-                            if (latestVersion.isNotEmpty() && latestVersion != BuildConfig.VERSION_NAME) {
-                                showUpdateDialog = true
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                TicTacToeTheme {
+                    AppNavHost()
+                    var showUpdateDialog by remember { mutableStateOf(false) }
+                    var response by remember { mutableStateOf<UpdateModel?>(null) }
+                    val context = LocalContext.current
+                    LaunchedEffect(null) {
+                        withContext(Dispatchers.IO) {
+                            try {
+                                response = RetrofitClient.retrofitService.checkForUpdate()
+                                val latestVersion = response?.latestVersion ?: ""
+                                if (latestVersion.isNotEmpty() && latestVersion != BuildConfig.VERSION_NAME) {
+                                    showUpdateDialog = true
+                                }
+                            } catch (_: Exception) {
                             }
-                        } catch (_: Exception) {
                         }
                     }
+
+
+                    UpdateDialog(
+                        showDialog = showUpdateDialog,
+                        onDismiss = { showUpdateDialog = false },
+                        onDownloadClick = {
+                            val downloadUrl = response?.downloadUrl ?: ""
+                            if (downloadUrl.isNotEmpty()) {
+                                val intent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    downloadUrl.toUri()
+                                )
+                                context.startActivity(intent)
+                            }
+                            showUpdateDialog = false
+                        }
+                    )
                 }
-
-
-                UpdateDialog(
-                    showDialog = showUpdateDialog,
-                    onDismiss = { showUpdateDialog = false },
-                    onDownloadClick = {
-                        val downloadUrl = response?.downloadUrl ?: ""
-                        if (downloadUrl.isNotEmpty()) {
-                            val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                downloadUrl.toUri()
-                            )
-                            context.startActivity(intent)
-                        }
-                        showUpdateDialog = false
-                    }
-                )
             }
         }
     }

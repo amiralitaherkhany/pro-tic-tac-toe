@@ -13,7 +13,7 @@
     <string name="player_x">X - %1$d برد</string>
     <string name="player_o">O - %1$d برد</string>
     <string name="your_move">نوبت تو</string>
-    <string name="ai_s_move">AI’s Move</string>
+    <string name="ai_s_move">‫نوبت AI‬</string>
     <string name="you_lost">تو باختی :(</string>
     <string name="winner_is_x">‫X برنده شد‬</string>
     <string name="you_won_d">تو بردی :D</string>
@@ -31,4 +31,8 @@
     <string name="store">فروشگاه</string>
     <string name="rate">امتیاز بده</string>
     <string name="never">هرگز</string>
+    <string name="new_update_is_released">بروزرسانی جدید منتشر شده است</string>
+    <string name="update_to_get_new_features">بروزرسانی کن تا ویژگی های جدید دریافت کنی!</string>
+    <string name="update">بروزرسانی</string>
+    <string name="later">بعدا</string>
 </resources>
