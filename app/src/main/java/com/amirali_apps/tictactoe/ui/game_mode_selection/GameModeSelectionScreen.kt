@@ -102,7 +102,6 @@ fun GameModeSelectionScreen(
     var isActive by remember { mutableStateOf(true) }
     LaunchedEffect(configuration) {
         viewModel.getLanguage()
-        isActive = true
     }
     Box {
         BackgroundImage(Modifier.fillMaxSize())
@@ -182,7 +181,7 @@ fun GameModeSelectionScreen(
                         .padding(start = 20.dp),
                     onLocaleChanged = { newLocale ->
                         viewModel.changeLanguage(newLocale)
-                        isActive = false
+                        isActive = false // it will back true with activity recreation
                     },
                     selectedLocale = selectedLocale.selectedLanguage,
                     isActive = isActive
