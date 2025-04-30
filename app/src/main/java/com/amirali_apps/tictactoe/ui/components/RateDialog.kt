@@ -1,6 +1,5 @@
 package com.amirali_apps.tictactoe.ui.components
 
-import AppLocaleManager
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +13,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.LayoutDirection
 import com.amirali_apps.tictactoe.BuildConfig
 import com.amirali_apps.tictactoe.R
+import com.amirali_apps.tictactoe.utils.AppLocaleManager
 
 @Composable
 fun RateDialog(

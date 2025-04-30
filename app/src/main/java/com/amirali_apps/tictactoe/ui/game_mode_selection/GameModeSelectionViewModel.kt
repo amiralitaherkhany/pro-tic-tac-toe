@@ -1,8 +1,8 @@
 package com.amirali_apps.tictactoe.ui.game_mode_selection
 
-import AppLocaleManager
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.amirali_apps.tictactoe.utils.AppLocaleManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow

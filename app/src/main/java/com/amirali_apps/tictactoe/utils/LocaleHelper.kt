@@ -1,3 +1,5 @@
+package com.amirali_apps.tictactoe.utils
+
 import android.app.LocaleManager
 import android.content.Context
 import android.os.Build
