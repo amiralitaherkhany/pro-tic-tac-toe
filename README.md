@@ -49,7 +49,7 @@ modern Android development!
 
 ## Download
 
-You can download this game from link below :
+You can download this game from links below :
 
 [Download from Bazaar](https://cafebazaar.ir/app/com.amirali_apps.tictactoe?ref=share)
 
