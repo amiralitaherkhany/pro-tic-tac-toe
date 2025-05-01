@@ -52,3 +52,5 @@ modern Android development!
 You can download this game from link below :
 
 [Download from Bazaar](https://cafebazaar.ir/app/com.amirali_apps.tictactoe?ref=share)
+
+[Download from Myket](https://myket.ir/app/com.amirali_apps.tictactoe)
