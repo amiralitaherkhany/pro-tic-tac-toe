@@ -1,4 +1,5 @@
-<img src="app/src/main/tic_tac_toe_icon-playstore.png" width="1000" alt="Icon"/>
+<img src="app/src/main/tic_tac_toe_icon-playstore.png" alt="Icon"/>
+
 # Pro Tic Tac Toe
 
 A **Tic Tac Toe** game developed with **Kotlin** and **Jetpack Compose** for Android.  
