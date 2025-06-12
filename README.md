@@ -1,12 +1,12 @@
 
-# Pro Tic Tac Toe
-<img src="app/src/main/tic_tac_toe_icon-playstore.png" alt="Icon" width="200" height = "200"/>
+# <img src="app/src/main/tic_tac_toe_icon-playstore.png" alt="Icon" width="25px" height = "25px"/> Pro Tic Tac Toe
+
 
 A **Tic Tac Toe** game developed with **Kotlin** and **Jetpack Compose** for Android.  
 Play against your friend in an intuitive and clean interface. Built as a fun project to explore
 modern Android development!
 
-## Features
+## 🚀 Features
 
 - Player vs Player mode (local)
 - Player vs AI
@@ -14,7 +14,7 @@ modern Android development!
 - Clean and minimal UI using **Jetpack Compose**
 - **Localization** Support
 
-## Techs Used
+## 🧑🏻‍💻 Techs Used
 - **Kotlin** Programming Language
 - **Jetpack Compose** UI Toolkit
 - Navigation with **Compose Navigation**
@@ -22,7 +22,7 @@ modern Android development!
 - HTTP Client with **Retrofit**
 - Product **Flavors** for **Myket** and **Bazaar**
 
-## Screenshots
+## 🖼️ Screenshots
 
 <table>
   <tr>
@@ -51,7 +51,7 @@ modern Android development!
   </tr>
 </table>
 
-## Download
+## 📚 Download
 
 You can download this game from links below :
 
