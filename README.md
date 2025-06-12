@@ -1,6 +1,6 @@
-<img src="app/src/main/tic_tac_toe_icon-playstore.png" alt="Icon"/>
 
 # Pro Tic Tac Toe
+<img src="app/src/main/tic_tac_toe_icon-playstore.png" alt="Icon" width="200" height = "200"/>
 
 A **Tic Tac Toe** game developed with **Kotlin** and **Jetpack Compose** for Android.  
 Play against your friend in an intuitive and clean interface. Built as a fun project to explore
