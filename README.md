@@ -10,8 +10,17 @@ modern Android development!
 
 - Player vs Player mode (local)
 - Player vs AI
-- 3 different difficulties for AI
+- 3 different difficulties for **AI**
 - Clean and minimal UI using **Jetpack Compose**
+- **Localization** Support
+
+## Techs Used
+- **Kotlin** Programming Language
+- **Jetpack Compose** UI Toolkit
+- Navigation with **Compose Navigation**
+- Dependency Injection with **Hilt**
+- HTTP Client with **Retrofit**
+- Product **Flavors** for **Myket** and **Bazaar**
 
 ## Screenshots
 
@@ -42,15 +51,9 @@ modern Android development!
   </tr>
 </table>
 
-## Built With
-
-- **Kotlin** - Modern programming language for Android development
-- **Jetpack Compose** - Declarative UI framework for building native Android apps
-
 ## Download
 
 You can download this game from links below :
 
-[Download from Bazaar](https://cafebazaar.ir/app/com.amirali_apps.tictactoe?ref=share)
-
-[Download from Myket](https://myket.ir/app/com.amirali_apps.tictactoe)
+- [Download from Bazaar](https://cafebazaar.ir/app/com.amirali_apps.tictactoe?ref=share)
+- [Download from Myket](https://myket.ir/app/com.amirali_apps.tictactoe)
