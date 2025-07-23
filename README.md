@@ -57,3 +57,14 @@ You can download this game from links below :
 
 - [Download from Bazaar](https://cafebazaar.ir/app/com.amirali_apps.tictactoe?ref=share)
 - [Download from Myket](https://myket.ir/app/com.amirali_apps.tictactoe)
+
+## License
+
+This project is licensed under the **GNU Affero General Public License v3.0** (AGPLv3).
+
+Read the full license in the [LICENSE](./LICENSE) file.
+
+In summary:
+- You can **use**, **study**, and **modify** the code.
+- If you run it as a **public service** (e.g., a game on a website), you **must share the full source code**.
+- You **cannot close-source or commercially repackage** the project.
