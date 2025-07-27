@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ChildCare
@@ -51,6 +53,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -298,7 +301,12 @@ fun SecondContent(
                     onClick = {
                         isPro = false
                     },
-                    label = { Text(text = stringResource(R.string.classic)) },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.classic),
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    },
                     colors = FilterChipDefaults.filterChipColors(
                         containerColor = Color.White,
                         selectedLabelColor = Color.White,
@@ -338,7 +346,16 @@ fun SecondContent(
                     onClick = {
                         isPro = true
                     },
-                    label = { Text(text = stringResource(R.string.pro)) },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.pro),
+                            style = MaterialTheme.typography.bodyMedium.plus(
+                                TextStyle(
+                                    fontSize = 18.sp
+                                )
+                            ),
+                        )
+                    },
                     colors = FilterChipDefaults.filterChipColors(
                         containerColor = Color.White,
                         selectedLabelColor = Color.White,
@@ -383,8 +400,6 @@ fun SecondContent(
                         .padding(horizontal = 15.dp)
                         .weight(0.40f)
                 ) {
-                    val configuration = LocalConfiguration.current
-                    val screenWidthDp = configuration.screenWidthDp
                     AiLevel.entries.forEachIndexed { index, aiLevel ->
                         FilterChip(
                             modifier = Modifier
@@ -396,9 +411,19 @@ fun SecondContent(
                                 selectedAiLevel = index
                             },
                             label = {
-                                Text(
-                                    text = aiLevel.name,
-                                    fontSize = if (screenWidthDp < 500) (screenWidthDp * 0.026).sp else 10.sp,
+                                BasicText(
+                                    text = stringResource(aiLevel.stringResources),
+                                    style = MaterialTheme.typography.bodyMedium.plus(
+                                        TextStyle(
+                                            color = if (index == selectedAiLevel) Color.White else Color.Black,
+                                        )
+                                    ),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    autoSize = TextAutoSize.StepBased(
+                                        maxFontSize = 15.sp,
+                                        minFontSize = 5.sp,
+                                    )
                                 )
                             },
                             leadingIcon = {

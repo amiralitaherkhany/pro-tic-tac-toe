@@ -34,4 +34,7 @@
     <string name="update_to_get_new_features">Update to Get New Features!</string>
     <string name="update">Update</string>
     <string name="later">Later</string>
+    <string name="easy">Easy</string>
+    <string name="medium">Medium</string>
+    <string name="hard">Hard</string>
 </resources>

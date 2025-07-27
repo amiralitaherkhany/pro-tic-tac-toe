@@ -404,7 +404,7 @@ fun UserTurn(
             ) {
                 Text(
                     if (isTurnX) (if (viewModel.isAi) "X" else "O") else "O",
-                    style = MaterialTheme.typography.headlineMedium.plus(
+                    style = MaterialTheme.typography.headlineLarge.plus(
                         TextStyle(
                             fontSize = 50.sp
                         )
@@ -502,7 +502,7 @@ fun OpponentTurn(
 
                 Text(
                     if (isTurnX) "X" else (if (viewModel.isAi) "O" else "X"),
-                    style = MaterialTheme.typography.headlineMedium.plus(
+                    style = MaterialTheme.typography.headlineLarge.plus(
                         TextStyle(
                             fontSize = 50.sp
                         )

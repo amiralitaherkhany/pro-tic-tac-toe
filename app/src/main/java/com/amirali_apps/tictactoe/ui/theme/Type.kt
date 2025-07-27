@@ -29,9 +29,14 @@ val DmSans = FontFamily(
         FontWeight.Normal
     ),
 )
+val yekan = FontFamily(
+    Font(
+        R.font.yekan,
+    )
+)
 
 // Set of Material typography styles to start with
-val Typography = Typography(
+val enTypography = Typography(
     titleLarge = TextStyle(
         fontFamily = Array,
         fontWeight = FontWeight.Bold,
@@ -65,6 +70,44 @@ val Typography = Typography(
     ),
     bodySmall = TextStyle(
         fontFamily = DmSans,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+    ),
+)
+val faTypography = Typography(
+    titleLarge = TextStyle(
+        fontFamily = Array,
+        fontWeight = FontWeight.Bold,
+        fontSize = 72.sp,
+    ),
+    headlineLarge = TextStyle(
+        fontFamily = Array,
+        fontWeight = FontWeight.Normal,
+        fontSize = 52.sp,
+        textAlign = TextAlign.Center,
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = yekan,
+        fontWeight = FontWeight.Normal,
+        fontSize = 40.sp,
+    ),
+    bodyLarge = TextStyle(
+        fontFamily = yekan,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = yekan,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+    ),
+    labelMedium = TextStyle(
+        fontFamily = yekan,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+    ),
+    bodySmall = TextStyle(
+        fontFamily = yekan,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
     ),

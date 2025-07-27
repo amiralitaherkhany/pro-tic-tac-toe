@@ -1,5 +1,6 @@
 package com.amirali_apps.tictactoe.ui.game
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.amirali_apps.tictactoe.R
@@ -14,10 +15,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-enum class AiLevel(val depth: Int) {
-    EASY(2),
-    MEDIUM(4),
-    HARD(8),
+enum class AiLevel(
+    val depth: Int,
+    @StringRes val stringResources: Int
+) {
+    EASY(
+        2,
+        R.string.easy
+    ),
+    MEDIUM(
+        4,
+        R.string.medium
+    ),
+    HARD(
+        8,
+        R.string.hard
+    ),
 }
 
 @HiltViewModel
