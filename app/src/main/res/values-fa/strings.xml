@@ -14,9 +14,9 @@
     <string name="player_o">%1$d برد - O</string>
     <string name="your_move">نوبت تو</string>
     <string name="ai_s_move">‫نوبت AI‬</string>
-    <string name="you_lost">تو باختی :(</string>
+    <string name="you_lost">‫تو باختی :(‬</string>
     <string name="winner_is_x">‫X برنده شد‬</string>
-    <string name="you_won_d">تو بردی :D</string>
+    <string name="you_won_d">‫تو بردی :D‬</string>
     <string name="winner_is_o">‫O برنده شد‬</string>
     <string name="draw_play_again">مساوی، دوباره بازی کن</string>
     <string name="empty_string" />
