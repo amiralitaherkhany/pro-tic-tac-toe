@@ -13,6 +13,7 @@ private val DarkColorScheme = darkColorScheme(
     secondary = secondary,
     secondaryContainer = secondaryBackground,
 )
+
 //private val LightColorScheme = lightColorScheme(
 //)
 @Composable
@@ -28,5 +29,9 @@ fun TicTacToeTheme(
 
 @Composable
 fun getTypography(): Typography {
-    return if (AppLocaleManager().getLanguageCode(LocalContext.current) == "en") enTypography else faTypography
+    return when (AppLocaleManager().getLanguageCode(LocalContext.current)) {
+        "en" -> enTypography
+        "fa" -> faTypography
+        else -> enTypography
+    }
 }
