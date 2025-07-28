@@ -497,7 +497,7 @@ fun OpponentTurn(
                         )
                     ),
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.rotate(180f)
+                    modifier = Modifier.rotate(180f),
                 )
 
                 Text(
@@ -537,7 +537,7 @@ fun XoElement(
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         val maxW = maxWidth.value
         Text(
@@ -548,7 +548,7 @@ fun XoElement(
             color = if (isX) (if (isAi) accent2 else MaterialTheme.colorScheme.primary) else (if (isAi) accent3 else accent1),
             modifier = Modifier
                 .graphicsLayer(alpha = currentAlpha)
-                .padding(start = 1.dp)
+                .padding(start = 1.dp),
         )
     }
 }
@@ -576,7 +576,7 @@ fun Board(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(0.75f)
+                    .fillMaxWidth(0.75f),
             ) {
                 if (viewModel.isAi) {
                     Column(

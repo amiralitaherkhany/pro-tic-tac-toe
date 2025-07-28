@@ -35,6 +35,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -50,10 +51,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -62,6 +66,7 @@ import com.amirali_apps.tictactoe.R
 import com.amirali_apps.tictactoe.ui.components.MiniCustomButton
 import com.amirali_apps.tictactoe.ui.game.AiLevel
 import com.amirali_apps.tictactoe.ui.navigation.GameScreens
+import com.amirali_apps.tictactoe.utils.AppLocaleManager
 
 @Composable
 fun LocaleButton(
@@ -290,7 +295,7 @@ fun SecondContent(
                     .padding(horizontal = 20.dp)
                     .weight(0.40f)
             ) {
-                FilterChip(
+                CustomFilterChip(
                     modifier = Modifier
                         .size(
                             100.dp,
@@ -307,14 +312,6 @@ fun SecondContent(
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     },
-                    colors = FilterChipDefaults.filterChipColors(
-                        containerColor = Color.White,
-                        selectedLabelColor = Color.White,
-                        selectedContainerColor = Color.Black,
-                        selectedLeadingIconColor = Color.White,
-                        iconColor = Color.Black,
-                        labelColor = Color.Black,
-                    ),
                     leadingIcon = {
                         Icon(
                             contentDescription = "Classic Icon",
@@ -325,23 +322,15 @@ fun SecondContent(
                             )
                         )
                     },
-                    border = BorderStroke(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
                 )
                 Spacer(Modifier.weight(0.5f))
-                FilterChip(
+                CustomFilterChip(
                     modifier = Modifier
                         .size(
                             100.dp,
                             50.dp
                         )
                         .weight(1f),
-                    border = BorderStroke(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                    ),
                     selected = isPro,
                     onClick = {
                         isPro = true
@@ -356,14 +345,6 @@ fun SecondContent(
                             ),
                         )
                     },
-                    colors = FilterChipDefaults.filterChipColors(
-                        containerColor = Color.White,
-                        selectedLabelColor = Color.White,
-                        selectedContainerColor = Color.Black,
-                        selectedLeadingIconColor = Color.White,
-                        iconColor = Color.Black,
-                        labelColor = Color.Black,
-                    ),
                     leadingIcon = {
                         Icon(
                             contentDescription = "Pro Icon",
@@ -401,7 +382,7 @@ fun SecondContent(
                         .weight(0.40f)
                 ) {
                     AiLevel.entries.forEachIndexed { index, aiLevel ->
-                        FilterChip(
+                        CustomFilterChip(
                             modifier = Modifier
                                 .fillMaxHeight(0.5f)
                                 .weight(0.3f)
@@ -432,18 +413,6 @@ fun SecondContent(
                                     imageVector = iconList[index]
                                 )
                             },
-                            colors = FilterChipDefaults.filterChipColors(
-                                containerColor = Color.White,
-                                selectedLabelColor = Color.White,
-                                selectedContainerColor = Color.Black,
-                                selectedLeadingIconColor = Color.White,
-                                iconColor = Color.Black,
-                                labelColor = Color.Black,
-                            ),
-                            border = BorderStroke(
-                                width = 2.dp,
-                                color = MaterialTheme.colorScheme.primary,
-                            ),
                         )
                     }
                 }
@@ -598,5 +567,36 @@ fun CustomButton(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun CustomFilterChip(
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    label: @Composable (() -> Unit),
+    leadingIcon: @Composable (() -> Unit),
+) {
+    CompositionLocalProvider(LocalLayoutDirection provides if (AppLocaleManager().getLanguageCode(LocalContext.current) == "fa") LayoutDirection.Rtl else LayoutDirection.Ltr) {
+        FilterChip(
+            modifier = modifier,
+            border = BorderStroke(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.primary,
+            ),
+            selected = selected,
+            onClick = onClick,
+            label = label,
+            colors = FilterChipDefaults.filterChipColors(
+                containerColor = Color.White,
+                selectedLabelColor = Color.White,
+                selectedContainerColor = Color.Black,
+                selectedLeadingIconColor = Color.White,
+                iconColor = Color.Black,
+                labelColor = Color.Black,
+            ),
+            leadingIcon = leadingIcon,
+        )
     }
 }
