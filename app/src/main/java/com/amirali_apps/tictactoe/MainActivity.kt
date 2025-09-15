@@ -38,7 +38,7 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var keepOnScreenCondition = mutableStateOf(true)
+        val keepOnScreenCondition = mutableStateOf(true)
         installSplashScreen().setKeepOnScreenCondition {
             keepOnScreenCondition.value
         }
