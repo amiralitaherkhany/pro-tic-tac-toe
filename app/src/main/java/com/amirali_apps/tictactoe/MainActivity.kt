@@ -1,5 +1,6 @@
 package com.amirali_apps.tictactoe
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -72,48 +73,52 @@ class MainActivity : AppCompatActivity() {
                         showDialog = showUpdateDialog,
                         onDismiss = { showUpdateDialog = false },
                         onDownloadClick = {
-                            when (BuildConfig.FLAVOR) {
-                                "myket" -> {
-                                    val intent = context.packageManager
-                                        .getLaunchIntentForPackage("ir.mservices.market")
-
-                                    if (intent != null) {
-                                        val url = "myket://details?id=${context.packageName}"
-                                        val intent = Intent()
-                                        intent.action = Intent.ACTION_VIEW
-                                        intent.data = url.toUri()
-                                        context.startActivity(intent)
-                                    } else {
-                                        val intent = Intent(
-                                            Intent.ACTION_VIEW,
-                                            ("https://myket.ir").toUri()
-                                        )
-                                        context.startActivity(intent)
-                                    }
-                                }
-
-                                "bazaar" -> {
-                                    val intent = context.packageManager
-                                        .getLaunchIntentForPackage("com.farsitel.bazaar")
-                                    if (intent != null) {
-                                        val intent = Intent(Intent.ACTION_VIEW)
-                                        intent.data =
-                                            ("bazaar://details?id=${context.packageName}").toUri()
-                                        intent.setPackage("com.farsitel.bazaar")
-                                        context.startActivity(intent)
-                                    } else {
-                                        val intent = Intent(
-                                            Intent.ACTION_VIEW,
-                                            ("https://cafebazaar.ir").toUri()
-                                        )
-                                        context.startActivity(intent)
-                                    }
-                                }
-                            }
+                            openStore(context)
                             showUpdateDialog = false
                         }
                     )
                 }
+            }
+        }
+    }
+}
+
+fun openStore(context: Context) {
+    when (BuildConfig.FLAVOR) {
+        "myket" -> {
+            val intent = context.packageManager
+                .getLaunchIntentForPackage("ir.mservices.market")
+
+            if (intent != null) {
+                val url = "myket://details?id=${context.packageName}"
+                val intent = Intent()
+                intent.action = Intent.ACTION_VIEW
+                intent.data = url.toUri()
+                context.startActivity(intent)
+            } else {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    ("https://myket.ir").toUri()
+                )
+                context.startActivity(intent)
+            }
+        }
+
+        "bazaar" -> {
+            val intent = context.packageManager
+                .getLaunchIntentForPackage("com.farsitel.bazaar")
+            if (intent != null) {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data =
+                    ("bazaar://details?id=${context.packageName}").toUri()
+                intent.setPackage("com.farsitel.bazaar")
+                context.startActivity(intent)
+            } else {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    ("https://cafebazaar.ir").toUri()
+                )
+                context.startActivity(intent)
             }
         }
     }
@@ -134,7 +139,7 @@ fun AppNavHost() {
                 navArgument("isAi") { type = NavType.BoolType },
                 navArgument("level") { type = NavType.IntType },
             )
-        ) { backStackEntry ->
+        ) { _ ->
             GameScreen(
                 navController = navController,
             )
